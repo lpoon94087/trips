@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Japan Itinerary Map: Osaka to Tokyo (Rich Data)</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #faf8f5; }
+        #header { background: #1a252c; color: #fff; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; z-index: 1000; }
+        h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+        p.subtitle { margin: 5px 0 0 0; font-size: 13px; color: #a9b9c6; }
+        #map { width: 100vw; height: calc(100vh - 65px); z-index: 1; }
+        
+        .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); overflow: hidden; padding: 0; }
+        .leaflet-popup-content { margin: 0; line-height: 1.4; width: 300px !important; }
+        
+        .popup-header { padding: 12px 15px; color: white; display: flex; justify-content: space-between; align-items: baseline; }
+        .popup-header.transit { background-color: #34495e; }
+        .popup-header.city { background-color: #8e44ad; }
+        .popup-header.nature { background-color: #27ae60; }
+        .popup-header.onsen { background-color: #e74c3c; }
+        
+        .popup-title { font-weight: bold; font-size: 16px; margin-right: 10px; }
+        .popup-day { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; white-space: nowrap; }
+        
+        .popup-body { padding: 15px; background-color: #fff; }
+        .popup-desc { font-size: 13px; color: #444; margin: 0 0 10px 0; font-style: italic; }
+        
+        .popup-details { margin: 0 0 15px 0; padding-left: 18px; font-size: 12px; color: #333; }
+        .popup-details li { margin-bottom: 4px; }
+        
+        .link-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .action-link { display: block; text-align: center; background: #e8f4f8; color: #2980b9; text-decoration: none; padding: 6px; border-radius: 4px; font-size: 12px; font-weight: bold; transition: background 0.2s; border: 1px solid #bde0ec;}
+        .action-link:hover { background: #d4eaf2; }
+        
+        .popup-link { display: block; text-align: center; background: #f1f2f6; color: #2f3640; text-decoration: none; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; }
+        .popup-link:hover { background: #dfe4ea; }
+        
+        .legend { background: white; padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 12px; line-height: 1.5; color: #333; }
+        .legend i { width: 12px; height: 12px; display: inline-block; border-radius: 50%; margin-right: 8px; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); vertical-align: middle; }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>Nakasendo 2026 Route Map</h1>
+        <p class="subtitle">Osaka &rarr; Kiso Valley &rarr; Karuizawa &rarr; Kusatsu Onsen &rarr; Tokyo</p>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        var map = L.map('map').setView([35.6, 137.8], 7);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        var locations = [
+            { name: "Kansai Airport", lat: 34.4320, lng: 135.2304, day: "Day 1", type: "transit", desc: "Arrival hub in Osaka.", details: ["Arrive KIX 10:10 AM via EVA Air", "Train directly to downtown Osaka (arrival ~12:30 PM)", "Relax and settle in"], links: [] },
+            { name: "Osaka Kitchen St", lat: 34.6631, lng: 135.5050, day: "Day 2", type: "city", desc: "Sennichimae Doguyasuji market.", details: ["Morning cookware shopping", "Stock up on unique kitchen items"], links: [] },
+            { name: "teamLab Garden", lat: 34.6121, lng: 135.5218, day: "Day 2", type: "city", desc: "Immersive digital light art.", details: ["Starts around 6:00 PM", "Outdoor sensor-driven light installations integrated with nature"], links: [{text: "teamLab Osaka Official Info", url: "https://www.teamlab.art/e/botanicalgarden/"}] },
+            { name: "Nakatsugawa", lat: 35.4996, lng: 137.5028, day: "Day 3", type: "transit", desc: "Gateway to the Nakasendo.", details: ["1 hr 15 min JR ride from Nagoya", "Arrange luggage forwarding (~3000Y) to Kiso-Fukushima", "Stock up on cash (local trains are cash only)"], links: [] },
+            { name: "Magome-juku", lat: 35.5273, lng: 137.5668, day: "Day 4", type: "nature", desc: "Start of the Nakasendo hike.", details: ["Bus from Nakatsugawa (30 min)", "Hike to Tsumago: 8km walking distance taking 3-4 hours", "Use the ¥500 luggage forwarding between towns if needed"], links: [{text: "Official Hike Guide (Visit Kiso)", url: "https://en.visitkiso.com/nakasendo/magome-tsumago"}] },
+            { name: "Tsumago-juku", lat: 35.5768, lng: 137.5956, day: "Day 4", type: "city", desc: "Preserved Edo-period post town.", details: ["Overnight stay in traditional accommodation", "Morning walk to Nagiso (2hr)", "Business hours: 9:00 AM - 4:30 PM"], links: [] },
+            { name: "Kiso-Fukushima", lat: 35.8427, lng: 137.6961, day: "Day 5-7", type: "city", desc: "Valley basecamp.", details: ["Explore historic streets and stilt buildings over the river", "Onsen slow town days", "Train connections to Atera and Torii Pass"], links: [] },
+            { name: "Atera Valley", lat: 35.6888, lng: 137.6163, day: "Day 6", type: "nature", desc: "Emerald river and gorge.", details: ["Train to Nojiri (30 min), 5 min taxi to entrance", "Walk along the 15km valley famous for emerald-green water", "Most scenic area is 1 hr walk from entrance"], links: [{text: "Official English Field Guide (PDF)", url: "https://www.vill.okuwa.lg.jp/kanko/support/documents/aterafield_en.pdf"}] },
+            { name: "Narai-juku", lat: 35.9657, lng: 137.8138, day: "Day 7", type: "nature", desc: "Target of Torii Pass hike.", details: ["Train to Yabuhara (~20 min)", "Hike Torii Pass (2.5-4 hrs, 5-6 km)", "Gentle ridge walking with 1000 ft descent to Narai"], links: [] },
+            { name: "Matsumoto", lat: 36.2386, lng: 137.9689, day: "Day 8", type: "city", desc: "Castle and art district.", details: ["1.5-2 hrs travel via JR Shinano", "Visit Matsumoto Castle (National Treasure, 6 internal floors)", "See Yayoi Kusama collection at Museum of Art"], links: [{text: "Matsumoto Castle Official Site", url: "https://visitmatsumoto.com/en/spot/detail_1001.html"}] },
+            { name: "Karuizawa Sanctuary", lat: 36.3686, lng: 138.5958, day: "Day 10", type: "nature", desc: "Premier wildlife focus.", details: ["Opens at 9:30 AM", "Birdwatching quiet nature loop", "Potential to see flying squirrels at dusk"], links: [] },
+            { name: "Shiraito Waterfall", lat: 36.3986, lng: 138.6014, day: "Day 10", type: "nature", desc: "Delicate mountain waterfall.", details: ["Reached via 25 min bus from Karuizawa", "Easy forest trails nearby"], links: [] },
+            { name: "Yubatake, Kusatsu", lat: 36.6231, lng: 138.5966, day: "Day 11", type: "onsen", desc: "Massive hot water field.", details: ["Direct bus from Karuizawa (1.5 hrs)", "Highly acidic, mineral-rich water for skin benefits", "Overnight ryokan stay"], links: [] },
+            { name: "Shinjuku, Tokyo", lat: 35.6896, lng: 139.7005, day: "Day 12", type: "transit", desc: "Final trip terminal.", details: ["Direct JR Bus Kanto from Kusatsu (4 hrs)", "Base for remaining Tokyo shopping and gardens"], links: [{text: "Kanto Bus Schedule & Fares", url: "https://www.kanto-bus.co.jp/english/nightway/kusatsu.html"}] }
+        ];
+
+        var typeColors = {
+            'transit': '#34495e',
+            'city': '#8e44ad',
+            'nature': '#27ae60',
+            'onsen': '#e74c3c'
+        };
+
+        var routeCoords = [];
+
+        locations.forEach(function(loc) {
+            var color = typeColors[loc.type];
+            
+            var customIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: "<div style='background-color:" + color + "; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.6); margin-top: -7px; margin-left: -7px;'></div>",
+                iconSize: [14, 14],
+                iconAnchor: [0, 0]
+            });
+
+            var marker = L.marker([loc.lat, loc.lng], {icon: customIcon}).addTo(map);
+            
+            var detailsHtml = loc.details.map(function(d) { return "<li>" + d + "</li>"; }).join('');
+            
+            var linksHtml = '';
+            if (loc.links && loc.links.length > 0) {
+                var linkButtons = loc.links.map(function(link) {
+                    return "<a class='action-link' href='" + link.url + "' target='_blank'>\ud83d\udd17 " + link.text + "</a>";
+                }).join('');
+                linksHtml = "<div class='link-container'>" + linkButtons + "</div>";
+            }
+            
+            var popupContent = 
+                "<div class='popup-header " + loc.type + "'>" +
+                    "<span class='popup-title'>" + loc.name + "</span>" +
+                    "<span class='popup-day'>" + loc.day + "</span>" +
+                "</div>" +
+                "<div class='popup-body'>" +
+                    "<p class='popup-desc'>" + loc.desc + "</p>" +
+                    "<ul class='popup-details'>" + detailsHtml + "</ul>" +
+                    linksHtml +
+                    "<a class='popup-link' href='https://www.google.com/maps/search/?api=1&query=" + loc.lat + "," + loc.lng + "' target='_blank'>\ud83d\udccd Open in Google Maps</a>" +
+                "</div>";
+            
+            marker.bindPopup(popupContent);
+            routeCoords.push([loc.lat, loc.lng]);
+        });
+
+        L.polyline(routeCoords, {
+            color: '#2980b9', 
+            weight: 3, 
+            opacity: 0.8,
+            dashArray: '8, 8',
+            lineJoin: 'round'
+        }).addTo(map);
+
+        var legend = L.control({position: 'bottomright'});
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'legend');
+            div.innerHTML += '<strong>Location Types</strong><br>';
+            div.innerHTML += '<i style="background: #34495e"></i> Transit / Hub<br>';
+            div.innerHTML += '<i style="background: #8e44ad"></i> City / Art<br>';
+            div.innerHTML += '<i style="background: #27ae60"></i> Nature / Hike<br>';
+            div.innerHTML += '<i style="background: #e74c3c"></i> Onsen';
+            return div;
+        };
+        legend.addTo(map);
+
+    </script>
+</body>
+</html>
