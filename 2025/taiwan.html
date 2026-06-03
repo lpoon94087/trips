@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Taiwan Itinerary 2025: Round-Island Tour</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #faf8f5; }
+        #header { background: #1a252c; color: #fff; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: relative; z-index: 1000; }
+        h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+        p.subtitle { margin: 5px 0 0 0; font-size: 13px; color: #a9b9c6; }
+        #map { width: 100vw; height: calc(100vh - 65px); z-index: 1; }
+        
+        .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); overflow: hidden; padding: 0; }
+        .leaflet-popup-content { margin: 0; line-height: 1.4; width: 300px !important; }
+        
+        .popup-header { padding: 12px 15px; color: white; display: flex; justify-content: space-between; align-items: baseline; }
+        .popup-header.transit { background-color: #34495e; }
+        .popup-header.city { background-color: #8e44ad; }
+        .popup-header.nature { background-color: #27ae60; }
+        .popup-header.onsen { background-color: #e74c3c; }
+        
+        .popup-title { font-weight: bold; font-size: 16px; margin-right: 10px; }
+        .popup-day { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; white-space: nowrap; }
+        
+        .popup-body { padding: 15px; background-color: #fff; }
+        .popup-desc { font-size: 13px; color: #444; margin: 0 0 10px 0; font-style: italic; }
+        
+        .popup-details { margin: 0 0 15px 0; padding-left: 18px; font-size: 12px; color: #333; }
+        .popup-details li { margin-bottom: 4px; }
+        
+        .popup-link { display: block; text-align: center; background: #f1f2f6; color: #2f3640; text-decoration: none; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; }
+        .popup-link:hover { background: #dfe4ea; }
+
+        .popup-videos-title { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; color: #c0392b; margin: 0 0 8px 0; }
+        .popup-videos { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px 0; }
+        .vlink { position: relative; display: block; width: 130px; border-radius: 6px; overflow: hidden; text-decoration: none; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+        .vlink img { width: 130px; height: 73px; object-fit: cover; display: block; }
+        .vplay { position: absolute; top: 36%; left: 50%; transform: translate(-50%,-50%); color: #fff; font-size: 22px; text-shadow: 0 1px 5px rgba(0,0,0,0.9); }
+        .vlabel { display: block; font-size: 10px; color: #333; text-align: center; padding: 3px 0; background: #f1f2f6; font-weight: bold; }
+
+        /* Hover thumbnail tooltip */
+        .video-tooltip-wrap { padding: 0 !important; border: none !important; background: transparent !important; box-shadow: none !important; }
+        .video-tooltip-wrap:before { display: none !important; }
+        .video-tooltip { display: flex; gap: 4px; background: #1a252c; padding: 5px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+        .video-tooltip .vthumb { width: 150px; text-align: center; }
+        .video-tooltip .vthumb img { width: 150px; height: 84px; object-fit: cover; border-radius: 4px; display: block; }
+        .video-tooltip .vthumb span { display: block; font-size: 10px; color: #fff; padding-top: 3px; font-weight: bold; }
+        
+        .legend { background: white; padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 12px; line-height: 1.5; color: #333; position: absolute; bottom: 20px; right: 20px; z-index: 1000; }
+        .legend i { width: 12px; height: 12px; display: inline-block; border-radius: 50%; margin-right: 8px; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); vertical-align: middle; }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>Taiwan 2025 Route Map</h1>
+        <p class="subtitle">Taipei &rarr; Taichung &rarr; Alishan &rarr; Kenting &rarr; Hualien &rarr; Taipei</p>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        var map = L.map('map').setView([23.5, 121.0], 7); // Centered on Taiwan
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Trip Day 1 = 2025-12-05. videos[] holds the daily vlog(s) that actually cover each stop,
+        // assigned from the YouTube descriptions (not just the planned itinerary day).
+        var locations = [
+            { name: "Taipei (Start)", lat: 25.0330, lng: 121.5654, day: "Day 1 · Dec 5", type: "transit", desc: "Start of tour.", details: ["Morning pickup at Taipei hotel at 09:30"], videos: [{label: "Dec 5", id: "rC4wscBixDQ"}] },
+            { name: "Yehliu Geopark", lat: 25.2064, lng: 121.6903, day: "Day 1 · Dec 5", type: "nature", desc: "Famous coastal geological formations.", details: ["See the iconic Queen's Head rock"], videos: [{label: "Dec 5", id: "rC4wscBixDQ"}] },
+            { name: "Shengxing Station, Miaoli", lat: 24.3893, lng: 120.7765, day: "Day 1 · Dec 5", type: "city", desc: "Historic railway station & old street.", details: ["Heritage Shengxing Station (Sanyi)", "Walk the old street"], videos: [{label: "Dec 5", id: "rC4wscBixDQ"}] },
+            { name: "Gaomei Wetlands", lat: 24.3119, lng: 120.5498, day: "Day 1 · Dec 5", type: "nature", desc: "Coastal tidal flats.", details: ["Sunset viewing with windmills in the background"], videos: [{label: "Dec 5", id: "rC4wscBixDQ"}] },
+            { name: "Taichung (Fengjia)", lat: 24.1788, lng: 120.6467, day: "Day 1-2 · Dec 5-6", type: "city", desc: "City base & night market.", details: ["Walk to Fengjia Night Market", "Dec 6: Miyahara for ice cream & pineapple cakes"], videos: [{label: "Dec 5", id: "rC4wscBixDQ"}, {label: "Dec 6", id: "sRdfcyL5Gqc"}] },
+            { name: "Lukang Old Street", lat: 24.0536, lng: 120.4330, day: "Day 2 · Dec 6", type: "city", desc: "Historic town in Changhua.", details: ["Afternoon exploration of heritage architecture", "Lunch at Wuqi Fishing Harbor prior"], videos: [{label: "Dec 6", id: "sRdfcyL5Gqc"}] },
+            { name: "Zhong She Flower Market", lat: 24.3174, lng: 120.7095, day: "Day 3 · Dec 7", type: "nature", desc: "Seasonal flower fields in Houli.", details: ["Flower viewing"], videos: [{label: "Dec 7", id: "B9DnwgkdOGE"}] },
+            { name: "Wufeng Lin Family Mansion", lat: 24.0594, lng: 120.7003, day: "Day 3 · Dec 7", type: "city", desc: "Historic family mansion & garden.", details: ["Heritage architecture & garden", "SunnyHills (Nantou) pineapple cake en route"], videos: [{label: "Dec 7", id: "B9DnwgkdOGE"}] },
+            { name: "Sun Moon Lake", lat: 23.8624, lng: 120.9152, day: "Day 3-4 · Dec 7-8", type: "nature", desc: "Iconic alpine lake.", details: ["Dec 7: arrive & overnight", "Dec 8: boat tour"], videos: [{label: "Dec 7", id: "B9DnwgkdOGE"}, {label: "Dec 8", id: "5TzyzFMtVLg"}] },
+            { name: "Xiluo Old Street", lat: 23.7975, lng: 120.4658, day: "Day 4 · Dec 8", type: "city", desc: "Old street in Yunlin.", details: ["Rueichun Soy Sauce", "Lunch on the old street"], videos: [{label: "Dec 8", id: "5TzyzFMtVLg"}] },
+            { name: "Alishan", lat: 23.5100, lng: 120.8166, day: "Day 4-5 · Dec 8-9", type: "nature", desc: "Mountain forest and tea plantations.", details: ["Dec 8: Xiding Tea Plantation & overnight", "Dec 9: Alishan sunrise & forest train", "Forest trail walk"], videos: [{label: "Dec 8", id: "5TzyzFMtVLg"}, {label: "Dec 9", id: "HUZyQQjoCYw"}] },
+            { name: "Fenqihu Old Street", lat: 23.5048, lng: 120.6938, day: "Day 5 · Dec 9", type: "city", desc: "Mountain village old street.", details: ["Famous railway bento", "En route down from Alishan"], videos: [{label: "Dec 9", id: "HUZyQQjoCYw"}] },
+            { name: "Tainan", lat: 22.9997, lng: 120.2270, day: "Day 5-6 · Dec 9-10", type: "city", desc: "Taiwan's cultural capital.", details: ["Dec 9: overnight in a Tainan guesthouse", "Dec 10: Black-faced Spoonbill Conservatory", "Souvenirs at Hayashi Department Store"], videos: [{label: "Dec 9", id: "HUZyQQjoCYw"}, {label: "Dec 10", id: "1SWCwvlyBuQ"}] },
+            { name: "Kaohsiung", lat: 22.6806, lng: 120.2941, day: "Day 6-7 · Dec 10-11", type: "city", desc: "Southern harbor city.", details: ["Dec 10: Dragon & Tiger Pagodas, Sizihwan at sunset", "Dec 11: Formosa Boulevard MRT light dome"], videos: [{label: "Dec 10", id: "1SWCwvlyBuQ"}, {label: "Dec 11", id: "leWWCbLzSSs"}] },
+            { name: "Pier-2 Art Center", lat: 22.6206, lng: 120.2816, day: "Day 7 · Dec 11", type: "city", desc: "Waterfront art district in Kaohsiung.", details: ["Converted warehouse galleries & installations"], videos: [{label: "Dec 11", id: "leWWCbLzSSs"}] },
+            { name: "Kenting", lat: 21.9442, lng: 120.7966, day: "Day 7-8 · Dec 11-12", type: "nature", desc: "Tropical beach destination.", details: ["Dec 11: Kenting beach & Sail Rock", "Dec 12: Longpan Grassland & Southernmost point (no video)"], videos: [{label: "Dec 11", id: "leWWCbLzSSs"}] },
+            { name: "Chishang, Taitung", lat: 23.1232, lng: 121.1953, day: "Day 9 · Dec 13", type: "nature", desc: "Famous rice farming valley.", details: ["Biked through rice fields to the Takeshi Kaneshiro Tree", "Mr. Brown Avenue"], videos: [{label: "Dec 13", id: "ANRzO-s6sos"}, {label: "Dec 13 · Biking", id: "p5XP3JaPltc"}, {label: "Dec 13 · Biking (Long)", id: "9f9r_hDZuew"}] },
+            { name: "Shitiping / East Coast", lat: 23.4839, lng: 121.5097, day: "Day 9 · Dec 13", type: "nature", desc: "Dramatic coastal scenery.", details: ["Drive via Yuchang Road", "Volcanic rock coastal terraces"], videos: [{label: "Dec 13", id: "ANRzO-s6sos"}] },
+            { name: "Qixingtan, Hualien", lat: 24.0287, lng: 121.6322, day: "Day 9-10 · Dec 13-14", type: "nature", desc: "Pebble beach.", details: ["Dec 13: overnight by the coast", "Dec 14: Promisedland Resort & Starbucks bald cypress trees"], videos: [{label: "Dec 13", id: "ANRzO-s6sos"}, {label: "Dec 14", id: "RyhTnJvDD_E"}] },
+            { name: "Qingshui Cliffs", lat: 24.2120, lng: 121.6702, day: "Day 10 · Dec 14", type: "nature", desc: "Stunning coastal highway views.", details: ["Taroko entrance photo stop", "Drive the scenic Suhua Highway"], videos: [{label: "Dec 14", id: "RyhTnJvDD_E"}] },
+            { name: "Jiaoxi, Yilan", lat: 24.8267, lng: 121.7719, day: "Day 10 · Dec 14", type: "onsen", desc: "Hot spring town.", details: ["Lunch at Nanfang'ao Fishing Harbor prior", "Relax in a Jiaoxi hot spring guesthouse"], videos: [{label: "Dec 14", id: "RyhTnJvDD_E"}] },
+            { name: "Jiufen / Shifen", lat: 25.1098, lng: 121.8452, day: "Day 11 · Dec 15", type: "city", desc: "Mountain village and lanterns.", details: ["Shifen sky lanterns & waterfall", "Jiufen Old Street exploration"], videos: [{label: "Dec 15", id: "9Lm0nElVCR0"}] },
+            { name: "Taipei (End of tour)", lat: 25.0330, lng: 121.5654, day: "Day 11 · Dec 15", type: "transit", desc: "Return to Taipei. End of the round-island tour.", details: ["Back to Taipei hotel"], videos: [{label: "Dec 15", id: "9Lm0nElVCR0"}] },
+            { name: "Xingtian Temple", lat: 25.0632, lng: 121.5337, day: "Day 12 · Dec 16", type: "city", desc: "Popular Taipei temple (extra day).", details: ["Xiduo Shi breakfast", "Xingtian Temple", "Simple Kaffa lunch with Wayne & Sandy"], videos: [{label: "Dec 16", id: "d5L3odXjE4k"}] },
+            { name: "Taipei 101", lat: 25.0340, lng: 121.5645, day: "Day 13 · Dec 17", type: "city", desc: "Taipei landmark tower (extra day).", details: ["Breakfast at 秦小姐豆漿 (Xinyi)", "Taipei 101", "Lunch at The Carp"], videos: [{label: "Dec 17", id: "lAcBO75qbOU"}] },
+            { name: "Huashan 1914 Creative Park", lat: 25.0441, lng: 121.5293, day: "Day 13 · Dec 17", type: "city", desc: "Arts & culture park in a former winery.", details: ["Exhibitions, shops & cafes"], videos: [{label: "Dec 17", id: "lAcBO75qbOU"}] }
+        ];
+
+        var typeColors = {
+            'transit': '#34495e',
+            'city': '#8e44ad',
+            'nature': '#27ae60',
+            'onsen': '#e74c3c'
+        };
+
+        var routeCoords = [];
+
+        locations.forEach(function(loc) {
+            var color = typeColors[loc.type];
+            
+            var customIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: "<div style='background-color:" + color + "; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.6); margin-top: -7px; margin-left: -7px;'></div>",
+                iconSize: [14, 14],
+                iconAnchor: [0, 0]
+            });
+
+            var marker = L.marker([loc.lat, loc.lng], {icon: customIcon}).addTo(map);
+            
+            var detailsHtml = loc.details.map(function(d) { return "<li>" + d + "</li>"; }).join('');
+
+            var videos = loc.videos || [];
+            var videosHtml = '';
+            if (videos.length) {
+                videosHtml = "<p class='popup-videos-title'>\ud83c\udfac Videos</p><div class='popup-videos'>";
+                videos.forEach(function(v) {
+                    videosHtml +=
+                        "<a class='vlink' href='https://www.youtube.com/watch?v=" + v.id + "' target='_blank'>" +
+                            "<img loading='lazy' src='https://i.ytimg.com/vi/" + v.id + "/mqdefault.jpg' />" +
+                            "<span class='vplay'>\u25b6</span>" +
+                            "<span class='vlabel'>" + v.label + "</span>" +
+                        "</a>";
+                });
+                videosHtml += "</div>";
+            }
+
+            var popupContent =
+                "<div class='popup-header " + loc.type + "'>" +
+                    "<span class='popup-title'>" + loc.name + "</span>" +
+                    "<span class='popup-day'>" + loc.day + "</span>" +
+                "</div>" +
+                "<div class='popup-body'>" +
+                    "<p class='popup-desc'>" + loc.desc + "</p>" +
+                    "<ul class='popup-details'>" + detailsHtml + "</ul>" +
+                    videosHtml +
+                    "<a class='popup-link' href='https://www.google.com/maps/search/?api=1&query=" + loc.lat + "," + loc.lng + "' target='_blank'>\ud83d\udccd Open in Google Maps</a>" +
+                "</div>";
+
+            marker.bindPopup(popupContent);
+
+            if (videos.length) {
+                var thumbsHtml = videos.map(function(v) {
+                    return "<div class='vthumb'>" +
+                        "<img loading='lazy' src='https://i.ytimg.com/vi/" + v.id + "/mqdefault.jpg' />" +
+                        "<span>" + v.label + "</span>" +
+                    "</div>";
+                }).join('');
+                marker.bindTooltip("<div class='video-tooltip'>" + thumbsHtml + "</div>", {
+                    direction: 'top',
+                    offset: [0, -8],
+                    opacity: 1,
+                    className: 'video-tooltip-wrap'
+                });
+            }
+
+            routeCoords.push([loc.lat, loc.lng]);
+        });
+
+        // Loop the line back to Taipei for the complete circuit
+        L.polyline(routeCoords, {
+            color: '#2980b9', 
+            weight: 3, 
+            opacity: 0.8,
+            dashArray: '8, 8',
+            lineJoin: 'round'
+        }).addTo(map);
+
+        var legend = L.control({position: 'bottomright'});
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'legend');
+            div.innerHTML += '<strong>Location Types</strong><br>';
+            div.innerHTML += '<i style="background: #34495e"></i> Transit / Hub<br>';
+            div.innerHTML += '<i style="background: #8e44ad"></i> City / Food / Culture<br>';
+            div.innerHTML += '<i style="background: #27ae60"></i> Nature / Scenic<br>';
+            div.innerHTML += '<i style="background: #e74c3c"></i> Hot Spring';
+            return div;
+        };
+        legend.addTo(map);
+
+    </script>
+</body>
+</html>
