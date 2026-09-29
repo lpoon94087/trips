@@ -1,0 +1,290 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Nakasendo Packing List</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style id="css">
+:root{
+  --bg:#f1f4f1; --surface:#ffffff; --ink:#1c2721; --muted:#5d6b63; --line:#d9e0db;
+  --accent:#2b4c7e; --accent-soft:#e3e9f3; --gold:#8a6420; --gold-soft:#f3ead8;
+  --done:#7d8a83; --focus:#2b4c7e;
+  --f-display:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",Georgia,serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111713; --surface:#18201b; --ink:#e3e9e4; --muted:#9aa89f; --line:#2a352e;
+    --accent:#93acd8; --accent-soft:#1f2a3b; --gold:#d9b168; --gold-soft:#2c2618;
+    --done:#6f7d75; --focus:#93acd8;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111713; --surface:#18201b; --ink:#e3e9e4; --muted:#9aa89f; --line:#2a352e;
+  --accent:#93acd8; --accent-soft:#1f2a3b; --gold:#d9b168; --gold-soft:#2c2618;
+  --done:#6f7d75; --focus:#93acd8;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;padding:0 16px}
+.wrap{max-width:720px;margin:0 auto;padding-block:28px 64px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,38px);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:.01em}
+.route{margin:8px 0 0;color:var(--muted);font-size:14px}
+.route b{color:var(--ink);font-weight:500}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin:20px -16px 0;padding:12px 16px 12px;border-bottom:1px solid var(--line)}
+.bar-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.total{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.total span{color:var(--muted)}
+.meter{flex:1 1 140px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:100px}
+.meter i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.status{font-size:12px;color:var(--muted);white-space:nowrap}
+.status.warn{color:var(--gold)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip-btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.chip-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.chip-btn:focus-visible,.item input:focus-visible+.box,.reset:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+.handoff{margin-top:22px;background:var(--gold-soft);border-radius:10px;padding:14px 16px;font-size:14px}
+.handoff strong{color:var(--gold);font-weight:700}
+
+section{margin-top:30px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:6px}
+h2{font-family:var(--f-display);font-weight:600;font-size:20px;margin:0}
+.count{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.count.full{color:var(--accent)}
+.sec-note{margin:8px 0 0;font-size:13px;color:var(--muted)}
+ul{list-style:none;margin:0;padding:0}
+.item{border-bottom:1px solid var(--line)}
+.item label{display:flex;gap:12px;align-items:flex-start;padding:11px 2px;cursor:pointer}
+.item input{position:absolute;opacity:0;width:1px;height:1px}
+.box{flex:none;width:22px;height:22px;margin-top:1px;border:1.5px solid var(--muted);border-radius:5px;display:grid;place-items:center;background:var(--surface);transition:background .15s,border-color .15s}
+.box::after{content:"";width:6px;height:11px;border:solid var(--bg);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px);opacity:0}
+.item input:checked+.box{background:var(--accent);border-color:var(--accent)}
+.item input:checked+.box::after{opacity:1}
+.txt{flex:1;min-width:0}
+.name{display:block;font-weight:500}
+.note{display:block;font-size:13px;color:var(--muted)}
+.item.on .name{color:var(--done);text-decoration:line-through;text-decoration-thickness:1px}
+.day{flex:none;align-self:center;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);background:var(--gold-soft);padding:2px 8px;border-radius:4px}
+
+.only-day .item:not([data-day]){display:none}
+.hide-done .item.on{display:none}
+section.empty{display:none}
+
+.tips{margin-top:40px;font-size:14px;color:var(--muted)}
+.tips h2{color:var(--ink);font-size:18px;margin-bottom:8px}
+.tips ul{list-style:disc;padding-left:20px;display:grid;gap:6px}
+.reset{margin-top:28px;font:inherit;font-size:13px;background:none;border:1px solid var(--line);color:var(--muted);padding:7px 14px;border-radius:6px;cursor:pointer}
+.reset.arm{border-color:var(--gold);color:var(--gold)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<template id="markup"><div class="wrap" id="app">
+  <h1>Nakasendo Packing List</h1>
+  <p class="route">One traveler · Oct 9–24, 2026 · <b>Osaka → Kiso Valley → Karuizawa → Kusatsu → Tokyo</b></p>
+  <div class="bar">
+    <div class="bar-row">
+      <div class="total" id="total">0 <span>/ 0 packed</span></div>
+      <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+      <div class="status" id="status" role="status">Connecting…</div>
+    </div>
+    <div class="filters">
+      <button class="chip-btn" id="f-day" aria-pressed="false" type="button">Day 4 daypack only</button>
+      <button class="chip-btn" id="f-done" aria-pressed="false" type="button">Hide packed</button>
+    </div>
+  </div>
+  <div class="handoff"><strong>Before the suitcases leave Nakatsugawa (Day 3):</strong> pack everything tagged <span class="day">Daypack</span> into the daypack. The bags don't reach you again until Kiso-Fukushima on Day 5.</div>
+  <div id="list"></div>
+  <div class="tips">
+    <h2>Luggage notes</h2>
+    <ul>
+      <li>Keep suitcases small. On the Shinkansen, bags over 160 cm (length + width + height) need a reserved oversized-luggage seat.</li>
+      <li>Forwarding from Nakatsugawa to Kiso-Fukushima runs about ¥3,000 per suitcase.</li>
+      <li>Mid-October runs from 20–25°C in Osaka and Tokyo to near freezing on mornings in Karuizawa and Kusatsu. Pack layers.</li>
+    </ul>
+    <button class="reset" id="reset" type="button">Uncheck everything</button>
+  </div>
+</div></template>
+<script type="application/json" id="state">{"checked":{"cards":true,"confirms":true,"insurance":true,"passports":true,"vjw":true,"yen":true}}</script>
+<script id="main">
+(function(){
+var SECTIONS=[
+ {id:"docs",title:"Documents & money",items:[
+  ["passports","Passport","",1],
+  ["vjw","Visit Japan Web QR codes","Complete before the flight"],
+  ["confirms","Flight, hotel and train confirmations","Saved offline and printed"],
+  ["insurance","Travel insurance details",""],
+  ["cards","2 credit cards + ATM/debit card","A spare in case one is declined",1],
+  ["yen","¥15,000–20,000 cash on arrival","Withdraw more at 7-Eleven in Nakatsugawa on Day 3",1],
+  ["coins","Coin purse","Buses, shrines, onsen",1],
+  ["suica","Suica on your iPhone, or an IC card","Won't work on Kiso local trains"]]},
+ {id:"clothes",title:"Clothing",note:"Plan one coin-laundry stop in Kiso-Fukushima or Matsumoto.",items:[
+  ["shirts","5–7 shirts","Quick-dry tees plus 1–2 long-sleeve"],
+  ["pants","2–3 hiking or travel pants","No cotton jeans on hiking days"],
+  ["nice","1 nicer outfit","Tokyo and dinners"],
+  ["underwear","5–7 underwear",""],
+  ["socks","5–7 pairs of socks","Include 2–3 wool hiking pairs; a spare pair goes in the daypack",1],
+  ["fleece","Fleece or light sweater","",1],
+  ["puffy","Light insulated jacket","For Karuizawa and Kusatsu"],
+  ["rain","Waterproof rain jacket","",1],
+  ["sleep","Sleepwear","Ryokan provide yukata"],
+  ["hat","Cap and light beanie",""],
+  ["gloves","Light gloves (optional)","Early birding walks"]]},
+ {id:"shoes",title:"Footwear",items:[
+  ["trail","Trail runners or broken-in hiking shoes",""],
+  ["slipon","Slip-on shoes","Shoes come off at ryokan, temples and some restaurants"],
+  ["sandals","Sandals (optional)","Ryokan provide slippers"]]},
+ {id:"hike",title:"Hiking & day gear",items:[
+  ["daypack","20–30L daypack with rain cover or liner","",1],
+  ["water","Water bottles, 1.5–2 L total","",1],
+  ["poles","Collapsible trekking poles","For the Torii Pass descent into Narai"],
+  ["bell","Bear bell","Standard on Kiso Valley trails",1],
+  ["sunscreen","Sunscreen and lip balm","",1],
+  ["firstaid","First-aid kit","Blister plasters, bandages, pain relievers",1],
+  ["snacks","Trail snacks","Buy in Nakatsugawa",1],
+  ["trash","Small trash bag","Public bins are rare; carry your trash out",1]]},
+ {id:"birds",title:"Birding & nature",items:[
+  ["binos","Binoculars",""],
+  ["merlin","Merlin Bird ID with the Japan pack","Download before you leave"],
+  ["headlamp","Headlamp or small flashlight","Flying squirrel tour, early walks"]]},
+ {id:"onsen",title:"Onsen",items:[
+  ["towel","Small towel","",1],
+  ["hairties","Hair ties",""],
+  ["pouch","Waterproof phone pouch",""],
+  ["tattoo","Check onsen tattoo policies","Use the “open to foreigners” list in the itinerary"]]},
+ {id:"toiletries",title:"Toiletries",note:"Ryokan and hotels supply shampoo, soap, toothbrushes and razors.",items:[
+  ["meds","Prescription medicines","In original bottles",1],
+  ["moist","Moisturizer","Kusatsu's water is very acidic"],
+  ["sanitizer","Hand sanitizer and pocket tissues","",1],
+  ["hanky","Handkerchief","Many restrooms have no paper towels",1],
+  ["eyes","Glasses or contacts, sunglasses",""],
+  ["travelsize","Travel-size toiletries","For the Tsumago night",1]]},
+ {id:"tech",title:"Electronics",items:[
+  ["phones","Phone and charger","",1],
+  ["powerbank","Power bank","Carry-on only on the flight",1],
+  ["esim","eSIM or pocket Wi-Fi, set up before leaving",""],
+  ["offline","Offline Google Maps of the Kiso Valley",""],
+  ["cables","Short charging cables","Japan uses Type A plugs at 100V; no adapter needed"]]},
+ {id:"misc",title:"Misc",items:[
+  ["tote","Foldable tote bag","Stores charge for bags"],
+  ["laundry","Laundry bag and detergent sheets",""],
+  ["ear","Earplugs and eye mask","Flight and thin ryokan walls"],
+  ["umbrella","Compact umbrella (optional)",""],
+  ["space","Room for souvenirs","Osaka kitchenware"]]}
+];
+var TITLE="Nakasendo Packing List";
+var FONTS='<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Shippori+Mincho:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">';
+var PREFIX='<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>\n';
+var PEND="nakasendo-pending",LOCAL="nakasendo-local",PREFS="nakasendo-prefs";
+
+function store(s,k,v){try{var o=window[s];if(v===undefined)return o.getItem(k);if(v===null)o.removeItem(k);else o.setItem(k,v);}catch(e){return null}}
+function parse(t,d){try{return JSON.parse(t)||d}catch(e){return d}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+var saved=parse(document.getElementById("state").textContent,{}).checked||{};
+var checked=Object.assign({},saved);
+var pending=parse(store("sessionStorage",PEND),{});
+var mode="pending",art=null,timer=null,retried=false;
+Object.keys(pending).forEach(function(k){if(pending[k])checked[k]=true;else delete checked[k];});
+
+var tpl=document.getElementById("markup");tpl.parentNode.insertBefore(tpl.content.cloneNode(true),tpl);
+var list=document.getElementById("list"),app=document.getElementById("app");
+list.innerHTML=SECTIONS.map(function(s){
+  return '<section id="s-'+s.id+'"><div class="sec-head"><h2>'+esc(s.title)+'</h2><span class="count"></span></div>'+
+   (s.note?'<p class="sec-note">'+esc(s.note)+'</p>':'')+'<ul>'+
+   s.items.map(function(it){
+     return '<li class="item" data-id="'+it[0]+'"'+(it[3]?' data-day':'')+'><label><input type="checkbox" id="c-'+it[0]+'"><span class="box"></span>'+
+      '<span class="txt"><span class="name">'+esc(it[1])+'</span>'+(it[2]?'<span class="note">'+esc(it[2])+'</span>':'')+'</span>'+
+      (it[3]?'<span class="day">Daypack</span>':'')+'</label></li>';
+   }).join("")+'</ul></section>';
+}).join("");
+
+function paint(){
+  var all=0,done=0;
+  SECTIONS.forEach(function(s){
+    var sec=document.getElementById("s-"+s.id),n=0,d=0,vis=0;
+    var onlyDay=app.classList.contains("only-day"),hide=app.classList.contains("hide-done");
+    s.items.forEach(function(it){
+      var on=!!checked[it[0]],li=sec.querySelector('[data-id="'+it[0]+'"]');
+      li.classList.toggle("on",on);li.querySelector("input").checked=on;
+      if(onlyDay&&!it[3])return;
+      n++;if(on)d++;if(!(hide&&on))vis++;
+    });
+    all+=n;done+=d;
+    var c=sec.querySelector(".count");c.textContent=d+" / "+n;c.classList.toggle("full",n>0&&d===n);
+    sec.classList.toggle("empty",vis===0);
+  });
+  document.getElementById("total").innerHTML=done+' <span>/ '+all+' packed</span>';
+  document.getElementById("meter").style.width=(all?done/all*100:0)+"%";
+}
+function status(t,warn){var el=document.getElementById("status");el.textContent=t;el.classList.toggle("warn",!!warn);}
+
+list.addEventListener("change",function(e){
+  var li=e.target.closest(".item");if(!li)return;
+  var id=li.getAttribute("data-id"),on=e.target.checked;
+  if(on)checked[id]=true;else delete checked[id];
+  pending[id]=on;paint();schedule();
+});
+
+function buildDoc(){
+  var keys=Object.keys(checked).sort(),c={};keys.forEach(function(k){c[k]=true});
+  var json=JSON.stringify({checked:c}).replace(/</g,"\\u003c");
+  var S="scr"+"ipt";
+  return PREFIX+"<title>"+TITLE+"</title>\n"+FONTS+'\n<style id="css">'+document.getElementById("css").textContent+"</style>\n"+
+    '<template id="markup">'+document.getElementById("markup").innerHTML+"</template>"+
+    '\n<'+S+' type="application/json" id="state">'+json+"</"+S+">\n<"+S+' id="main">'+document.getElementById("main").textContent+"</"+S+"></body></html>";
+}
+
+function schedule(){clearTimeout(timer);if(mode==="shared")status("Unsaved changes…");timer=setTimeout(save,2000);}
+function saveLocal(){store("localStorage",LOCAL,JSON.stringify(checked));pending={};store("sessionStorage",PEND,null);status("Saved on this device only",true);}
+function save(){
+  clearTimeout(timer);
+  if(mode==="local")return saveLocal();
+  if(mode!=="shared"||!Object.keys(pending).length)return;
+  store("sessionStorage",PEND,JSON.stringify(pending));
+  status("Saving…");
+  art.publish(buildDoc()).then(function(){pending={};store("sessionStorage",PEND,null);status("All changes saved");},function(e){
+    var c=e&&e.code;
+    if(c==="conflict"){status("Syncing with a newer version…");return;}
+    if(c==="rate_limited"){status("Saving shortly…");timer=setTimeout(save,15000);return;}
+    if((c==="upstream_error"||!c)&&!retried){retried=true;timer=setTimeout(save,2000+Math.random()*2000);return;}
+    if(c==="too_large"||c==="invalid_content"||c==="transform_error"||c==="upstream_error"||!c){status("Couldn't save. Changes kept on this device.",true);mode="local";saveLocal();return;}
+    mode="local";saveLocal();status("View only · ticks saved on this device",true);
+  });
+}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden"&&timer)save();});
+
+function goLocal(){
+  mode="local";
+  var loc=parse(store("localStorage",LOCAL),null);
+  if(loc){checked=loc;Object.keys(pending).forEach(function(k){if(pending[k])checked[k]=true;else delete checked[k];});}
+  paint();
+  if(Object.keys(pending).length)saveLocal();else status("Saved on this device only",true);
+}
+var cl=window.claude&&window.claude.use?window.claude.use("artifact"):Promise.resolve(null);
+cl.then(function(a){
+  if(!a)return goLocal();
+  art=a;mode="shared";
+  var diff=Object.keys(pending).some(function(k){return !!saved[k]!==!!pending[k]});
+  if(diff){save();}else{pending={};store("sessionStorage",PEND,null);status("All changes saved");}
+},goLocal);
+
+var prefs=parse(store("localStorage",PREFS),{});
+function setFilter(btn,cls,key){
+  var on=!!prefs[key];app.classList.toggle(cls,on);btn.setAttribute("aria-pressed",on?"true":"false");
+  btn.onclick=function(){prefs[key]=!prefs[key];store("localStorage",PREFS,JSON.stringify(prefs));setFilter(btn,cls,key);paint();};
+}
+setFilter(document.getElementById("f-day"),"only-day","day");
+setFilter(document.getElementById("f-done"),"hide-done","done");
+
+var reset=document.getElementById("reset"),armT=null;
+reset.onclick=function(){
+  if(!reset.classList.contains("arm")){reset.classList.add("arm");reset.textContent="Tap again to uncheck all";armT=setTimeout(function(){reset.classList.remove("arm");reset.textContent="Uncheck everything";},4000);return;}
+  clearTimeout(armT);reset.classList.remove("arm");reset.textContent="Uncheck everything";
+  Object.keys(checked).forEach(function(k){pending[k]=false});
+  SECTIONS.forEach(function(s){s.items.forEach(function(it){if(saved[it[0]])pending[it[0]]=false})});
+  checked={};paint();schedule();
+};
+paint();
+})();
+</script>
+</body></html>
