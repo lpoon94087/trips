@@ -4,6 +4,7 @@
 
 - [Nakasendo Itinerary Map](https://lpoon94087.github.io/trips/2026/Nakasendo.html) — interactive map (Osaka → Tokyo)
 - [Nakasendo Packing List](https://lpoon94087.github.io/trips/2026/Nakasendo-Packing.html) — packing checklist (ticks saved in your browser)
+- [Alaska Cruise Map](https://lpoon94087.github.io/trips/2026/alaska.html) — Celebrity Edge route with photos at each stop (Sep 11–18)
 
 ## 2025
 
