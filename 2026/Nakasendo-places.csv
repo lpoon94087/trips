@@ -1,0 +1,43 @@
+Stop,Name,Day,Date,Type,Location,Notes
+1,Kansai Airport Terminal 2,Day 1,Oct 10,Transit,関西国際空港 第2ターミナル,Arrive 10:10 AM
+2,Osaka hotel (TBD),Day 1,Oct 10,Lodging,大阪駅,Placeholder until the hotel is booked
+3,Sennichimae Doguyasuji (Kitchen Street),Day 2,Oct 11,Sight,千日前道具屋筋商店街,Kitchenware shopping
+4,teamLab Botanical Garden Osaka,Day 2,Oct 11,Sight,チームラボ ボタニカルガーデン 大阪,"Evening, around 6:00 PM"
+5,Shin-Osaka Station,Day 3,Oct 12,Transit,新大阪駅,Shinkansen to Nagoya (~50 min)
+6,Nagoya Station,Day 3,Oct 12,Transit,名古屋駅,JR to Nakatsugawa (~1 hr 15 min)
+7,Nakatsugawa Station,Day 3,Oct 12,Transit,中津川駅,Get cash; arrange luggage forwarding to Kiso-Fukushima
+8,Nakatsugawa hotel (TBD),Day 3,Oct 12,Lodging,中津川市,Placeholder until the hotel is booked
+9,Magome-juku,Day 4,Oct 13,Hike,馬籠宿,Bus from Nakatsugawa (~30 min); start of the hike
+10,Magome Pass,Day 4,Oct 13,Hike,馬籠峠,High point of the Magome–Tsumago walk
+11,Tsumago-juku,Day 4,Oct 13,Hike,妻籠宿,End of the 5.2 mi hike; shops open 9:00–4:30
+12,Kamichoujiya (上丁子屋),Day 4,Oct 13,Lodging,上丁子屋 妻籠宿,Overnight in Tsumago
+13,Nagiso Station,Day 5,Oct 14,Hike,南木曽駅,Morning walk from Tsumago (~2 hr)
+14,Kiso-Fukushima Station,Day 5,Oct 14,Transit,木曽福島駅,Train from Nagiso (~45–60 min)
+15,Kiso Mikawaya (木曽三河家),Day 5,Oct 14,Lodging,木曽三河家 木曽町,Base for Days 5–7
+16,Kozenji Temple (興禅寺),Day 5,Oct 14,Sight,興禅寺 木曽町,Listed as 禪興寺 in the itinerary
+17,Yamamura Daikan Yashiki,Day 5,Oct 14,Sight,山村代官屋敷,Old magistrate's residence
+18,Nojiri Station,Day 6,Oct 15,Transit,野尻駅,"Train from Kiso-Fukushima (~30 min), then 5 min taxi"
+19,Atera Valley,Day 6,Oct 15,Hike,阿寺渓谷,Riverside forest walk
+20,Yabuhara Station,Day 7,Oct 16,Transit,藪原駅,Train from Kiso-Fukushima (~20 min)
+21,Torii Pass,Day 7,Oct 16,Hike,鳥居峠,"Optional hike, 2.5–4 hr"
+22,Narai-juku,Day 7,Oct 16,Sight,奈良井宿,Explore 1–2 hr
+23,Narai Station,Day 7,Oct 16,Transit,奈良井駅,Train back to Kiso-Fukushima
+24,Matsumoto Station,Day 8,Oct 17,Transit,松本駅,JR from Kiso-Fukushima
+25,Matsumoto Castle,Day 8,Oct 17,Sight,松本城,
+26,Nawate Street,Day 8,Oct 17,Sight,縄手通り,
+27,Nakamachi Street,Day 8,Oct 17,Sight,中町通り 松本,
+28,Matsumoto City Museum of Art,Day 8,Oct 17,Sight,松本市美術館,Yayoi Kusama collection
+29,Mitsubikiya (三引屋),Day 8,Oct 17,Lodging,三引屋 松本,Family suite
+30,Nagano Station,Day 9,Oct 18,Transit,長野駅,"Shinano limited express from Matsumoto, then Shinkansen"
+31,Karuizawa Station,Day 9,Oct 18,Transit,軽井沢駅,Shinkansen from Nagano (~25 min)
+32,Kumoba Pond,Day 9,Oct 18,Sight,雲場池,
+33,Compass Globe,Day 9,Oct 18,Lodging,Compass Globe 軽井沢,"Days 9–10; check the pin, the name may not match on Maps"
+34,Hoshino Area (Picchio Early Bird Walk),Day 10,Oct 19,Hike,ピッキオ 軽井沢,Early bird walk
+35,Karuizawa Wild Bird Sanctuary,Day 10,Oct 19,Hike,軽井沢野鳥の森,Opens 9:30
+36,Shiraito Falls,Day 10,Oct 19,Sight,白糸の滝 軽井沢,~25 min bus
+37,Old Karuizawa Ginza Street,Day 10,Oct 19,Sight,旧軽井沢銀座通り,Cafés and shops
+38,Kusatsu Onsen Bus Terminal,Day 11,Oct 20,Transit,草津温泉バスターミナル,"Direct bus from Karuizawa (~1.5 hr, ¥2,200)"
+39,Yubatake,Day 11,Oct 20,Sight,湯畑 草津,
+40,Hotel Bou-un (望雲) — maybe,Day 11,Oct 20,Lodging,ホテル望雲 草津,Listed as 'Maybe' in the itinerary
+41,Busta Shinjuku,Day 12,Oct 21,Transit,バスタ新宿,JR Bus Kanto from Kusatsu (~4 hr)
+42,Tokyo hotel (TBD),Day 12,Oct 21,Lodging,新宿駅,Placeholder until the hotel is booked
