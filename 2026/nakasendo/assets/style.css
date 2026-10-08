@@ -351,3 +351,14 @@ body.page-map { padding-bottom: 0; }
   background: var(--surface); color: var(--ink); font: 700 15px var(--f-body); text-decoration: none;
   border: 2px solid var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,.18);
 }
+
+/* Speak buttons on phrases */
+.phrase { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; }
+.phrase .jp, .phrase .ro { grid-column: 1; }
+.phrase .speak {
+  grid-column: 2; grid-row: 1 / span 2; width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+  border: 2px solid var(--ink); background: var(--surface); display: grid; place-items: center; padding: 0;
+}
+.phrase .speak svg { width: 24px; height: 24px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.phrase .speak.on { background: var(--ink); }
+.phrase .speak.on svg { stroke: var(--paper); }
