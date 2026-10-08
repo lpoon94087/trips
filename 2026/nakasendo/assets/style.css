@@ -362,3 +362,10 @@ body.page-map { padding-bottom: 0; }
 .phrase .speak svg { width: 24px; height: 24px; stroke: var(--ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .phrase .speak.on { background: var(--ink); }
 .phrase .speak.on svg { stroke: var(--paper); }
+
+/* Taxi screen actions */
+.taxi-actions { margin-top: auto; display: grid; gap: 10px; }
+.taxi .close { margin-top: 0; }
+.taxi .say { min-height: 56px; font-size: 18px; background: #fff; color: #1e3150; border: 2px solid #1e3150; }
+.taxi .say svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.taxi .say.on { background: #1e3150; color: #fff; }

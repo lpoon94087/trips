@@ -48,6 +48,30 @@
   var phase = today < T.start ? "before" : today > T.end ? "after" : "during";
   window.NK = { today: today, todayDay: todayDay, phase: phase, longDate: longDate, icon: icon };
 
+  // ---------- speech (built-in Japanese voice; works offline on iPhone) ----------
+  var jaVoice = null;
+  var canSpeak = "speechSynthesis" in window;
+  function pickVoice() {
+    var vs = speechSynthesis.getVoices().filter(function (v) { return /^ja/i.test(v.lang); });
+    jaVoice = vs.find(function (v) { return v.localService; }) || vs[0] || null;
+  }
+  if (canSpeak) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+  // Read an address the way people say it: no postal code, and "1-1" as "1の1".
+  function spokenAddress(a) {
+    return a.replace(/〒\s*\d{3}-\d{4}\s*/g, "").replace(/(\d)\s*[-−ー]\s*(?=\d)/g, "$1の").replace(/\s+/g, " ").trim();
+  }
+  function speak(text, btn) {
+    if (!canSpeak) return;
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "ja-JP"; u.rate = 0.8;
+    if (jaVoice) u.voice = jaVoice;
+    if (btn) { btn.classList.add("on"); u.onend = u.onerror = function () { btn.classList.remove("on"); }; }
+    speechSynthesis.speak(u);
+  }
+  var SPK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+  window.NK.speak = speak; window.NK.canSpeak = canSpeak; window.NK.SPK = SPK;
+
   // ---------- to-do state (per device) ----------
   function doneKey(n, i) { return "nk-done-" + n + "-" + i; }
   function isDone(n, i) { try { return localStorage.getItem(doneKey(n, i)) === "1"; } catch (e) { return false; } }
@@ -243,17 +267,25 @@
     }).join("");
 
     var ov = document.getElementById("taxi");
+    var sayBtn = ov.querySelector(".say");
+    var current = null;
+    if (canSpeak) sayBtn.innerHTML = SPK + "<span>Say it in Japanese</span>";
+    else sayBtn.hidden = true;
     el.addEventListener("click", function (e) {
       var b = e.target.closest("[data-taxi]"); if (!b) return;
-      var s = stayFor(b.dataset.taxi);
-      ov.querySelector(".big").textContent = s.addrJp;
-      ov.querySelector(".nm").textContent = s.name;
-      ov.querySelector(".tel").textContent = s.phone || "";
+      current = stayFor(b.dataset.taxi);
+      ov.querySelector(".big").textContent = current.addrJp;
+      ov.querySelector(".nm").textContent = current.name;
+      ov.querySelector(".tel").textContent = current.phone || "";
       ov.classList.add("open");
       ov.querySelector(".close").focus();
     });
-    ov.querySelector(".close").addEventListener("click", function () { ov.classList.remove("open"); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") ov.classList.remove("open"); });
+    sayBtn.addEventListener("click", function () {
+      if (current) speak("この住所までお願いします。" + spokenAddress(current.addrJp), sayBtn);
+    });
+    function closeTaxi() { ov.classList.remove("open"); if (canSpeak) speechSynthesis.cancel(); }
+    ov.querySelector(".close").addEventListener("click", closeTaxi);
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeTaxi(); });
     var st = location.hash ? document.querySelector(location.hash) : tn ? document.getElementById(tn.id) : null;
     if (st) setTimeout(function () { st.scrollIntoView(); }, 50);
   }

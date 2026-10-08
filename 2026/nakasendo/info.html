@@ -191,30 +191,14 @@
       return "<tr><td>" + d.n + "</td><td>" + d.where.split(" → ").pop() + '</td><td class="num">' + (w.sky ? w.sky + " " : "") +
         w.hi + "/" + w.lo + "°C, " + f(w.hi) + "/" + f(w.lo) + "°F" + (w.typical ? " typ." : "") + "</td></tr>";
     }).join("");
-    // speak buttons for phrases (built-in Japanese voice; works offline on iPhone)
-    if ("speechSynthesis" in window) {
-      var voice = null;
-      function pickVoice() {
-        var vs = speechSynthesis.getVoices().filter(function (v) { return /^ja/i.test(v.lang); });
-        voice = vs.find(function (v) { return v.localService; }) || vs[0] || null;
-      }
-      pickVoice();
-      speechSynthesis.onvoiceschanged = pickVoice;
-      var SPK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+    // speak buttons for phrases (shared speech helper in app.js)
+    if (NK.canSpeak) {
       document.querySelectorAll(".phrase").forEach(function (p) {
         var jp = p.querySelector(".jp").textContent, ro = p.querySelector(".ro").textContent.split(":")[0];
         var b = document.createElement("button");
-        b.type = "button"; b.className = "speak"; b.innerHTML = SPK;
+        b.type = "button"; b.className = "speak"; b.innerHTML = NK.SPK;
         b.setAttribute("aria-label", "Say " + ro);
-        b.addEventListener("click", function () {
-          speechSynthesis.cancel();
-          var u = new SpeechSynthesisUtterance(jp);
-          u.lang = "ja-JP"; u.rate = 0.8;
-          if (voice) u.voice = voice;
-          b.classList.add("on");
-          u.onend = u.onerror = function () { b.classList.remove("on"); };
-          speechSynthesis.speak(u);
-        });
+        b.addEventListener("click", function () { NK.speak(jp, b); });
         p.appendChild(b);
       });
     }
