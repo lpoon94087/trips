@@ -342,3 +342,12 @@ body.page-map { padding-bottom: 0; }
 /* Latin figures for temperatures and prices (the Japanese face has wide ° and ¥) */
 .wxpill, .today .wx, .plan .t, .times strong, .info td.num, .progress { font-family: -apple-system, system-ui, "Helvetica Neue", sans-serif; }
 .addr-jp, .taxi .big { line-break: strict; }
+
+/* Shared Google Maps list */
+.quick a.wide { grid-column: 1 / -1; }
+.quick a small { display: block; font-weight: 400; color: var(--muted); font-size: 14px; }
+.map-filters a.saved {
+  flex: 0 0 auto; min-height: 40px; padding: 6px 14px; border-radius: 999px; display: flex; align-items: center;
+  background: var(--surface); color: var(--ink); font: 700 15px var(--f-body); text-decoration: none;
+  border: 2px solid var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}

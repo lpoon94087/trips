@@ -5,7 +5,9 @@ window.TRIP = {
   title: "Nakasendō 2026",
   start: "2026-10-09",
   end: "2026-10-24",
-  tz: "Asia/Tokyo"
+  tz: "Asia/Tokyo",
+  // Shared Google Maps list (view-only link; editing is off)
+  savedList: "https://maps.app.goo.gl/hqgxaayJiJdpBsfd6"
 };
 
 window.CATS = {

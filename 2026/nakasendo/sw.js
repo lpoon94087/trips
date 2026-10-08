@@ -1,5 +1,5 @@
 // Offline cache: pages and assets are served from cache and refreshed in the background.
-const CACHE = "nakasendo-v1";
+const CACHE = "nakasendo-v2";
 const CORE = [
   "./", "index.html", "days.html", "map.html", "stays.html", "info.html",
   "assets/style.css", "assets/data.js", "assets/app.js",
