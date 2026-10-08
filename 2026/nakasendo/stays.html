@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Where we sleep · Nakasendō 2026</title>
+  <meta name="theme-color" content="#1e3150">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="stays">
+  <main class="wrap">
+    <header class="page-head">
+      <h1>Where we sleep</h1>
+      <p>Eight stays. "Show to taxi driver" puts the address on screen in large Japanese text.</p>
+    </header>
+    <div class="stays-grid" id="stays"></div>
+  </main>
+
+  <div class="taxi" id="taxi" role="dialog" aria-modal="true" aria-label="Address for the taxi driver">
+    <p class="ask" lang="ja">この住所までお願いします。</p>
+    <p class="big" lang="ja"></p>
+    <p class="nm"></p>
+    <p class="tel"></p>
+    <button class="btn close" type="button">Close</button>
+  </div>
+
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

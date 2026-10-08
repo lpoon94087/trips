@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Map · Nakasendō 2026</title>
+  <meta name="theme-color" content="#1e3150">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="map" class="page-map">
+  <h1 class="sr-only">Trip map</h1>
+  <div class="map-filters" id="filters" role="group" aria-label="Show on map"></div>
+  <div id="map"></div>
+  <button class="locate" id="locate" type="button" aria-pressed="false" aria-label="Show my location">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+  </button>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+  (function () {
+    var css = getComputedStyle(document.documentElement);
+    function col(c) { return css.getPropertyValue("--" + c).trim(); }
+    var map = L.map("map", { zoomControl: false });
+    L.control.zoom({ position: "bottomleft" }).addTo(map);
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}", {
+      attribution: "Tiles &copy; Esri, Esri Japan, METI, and the GIS User Community", maxZoom: 18
+    }).addTo(map);
+
+    L.polyline(ROUTE, { color: col("ink"), weight: 3, opacity: .75, dashArray: "8 8" }).addTo(map);
+
+    var markers = [];
+    function pin(cat, opts) {
+      return L.divIcon({ className: "", iconSize: [18, 18], iconAnchor: [9, 9],
+        html: '<div class="pin' + (cat === "stay" ? " sq" : "") + (opts && opts.optional ? " opt" : "") + '" style="background:' + col(cat) + '"></div>' });
+    }
+    function dayLink(n) {
+      var d = DAYS[n];
+      return '<a href="days.html#day-' + n + '">Day ' + n + ", " + NK.longDate(d.date) + "</a>";
+    }
+    PLACES.forEach(function (p) {
+      var m = L.marker([p.lat, p.lng], { icon: pin(p.cat, p), title: p.name });
+      m.bindPopup("<b>" + p.name + "</b>" + (p.optional ? " (optional)" : "") + "<br>" + (p.note ? '<span class="pd">' + p.note + "</span><br>" : "") +
+        dayLink(p.day) + '<br><a href="https://www.google.com/maps/search/?api=1&query=' + p.lat + "," + p.lng + '" target="_blank" rel="noopener">Directions</a>');
+      markers.push({ m: m, cat: p.cat, day: p.day });
+    });
+    STAYS.forEach(function (s) {
+      var m = L.marker([s.lat, s.lng], { icon: pin("stay"), title: s.name, zIndexOffset: 500 });
+      m.bindPopup("<b>" + s.name + '</b><br><span class="pd">' + s.area + ", check-in " + s.in + '</span><br><a href="stays.html#' + s.id + '">Stay details</a>');
+      var first = DAYS.find(function (d) { return d.stay === s.id; });
+      markers.push({ m: m, cat: "stay", day: first ? first.n : -1, stay: s.id });
+    });
+
+    var filters = [["all", "All"], ["stay", "Stays"], ["hike", "Hiking"], ["bird", "Birding"], ["onsen", "Onsen"], ["town", "Towns"], ["travel", "Travel"]];
+    var q = new URLSearchParams(location.search);
+    var active = q.get("cat") || "all";
+    var dayFilter = q.has("day") ? +q.get("day") : null;
+    var fbox = document.getElementById("filters");
+    fbox.innerHTML = (dayFilter !== null ? '<button type="button" data-f="day" aria-pressed="true">Day ' + dayFilter + "</button>" : "") +
+      filters.map(function (f) {
+        return '<button type="button" data-f="' + f[0] + '" aria-pressed="' + (dayFilter === null && active === f[0]) + '">' +
+          (f[0] !== "all" ? '<i style="background:' + col(f[0]) + '"></i>' : "") + f[1] + "</button>";
+      }).join("");
+
+    function apply(fit) {
+      var shown = [];
+      markers.forEach(function (x) {
+        var ok;
+        if (dayFilter !== null) {
+          var d = DAYS[dayFilter];
+          ok = x.day === dayFilter || (x.stay && d.stay === x.stay);
+        } else ok = active === "all" || x.cat === active;
+        if (ok) { x.m.addTo(map); shown.push(x.m.getLatLng()); } else map.removeLayer(x.m);
+      });
+      if (fit) {
+        if (shown.length > 1) map.fitBounds(L.latLngBounds(shown), { padding: [60, 60], maxZoom: 14 });
+        else if (shown.length === 1) map.setView(shown[0], 13);
+        else map.fitBounds(L.latLngBounds(ROUTE), { padding: [40, 40] });
+      }
+    }
+    fbox.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var f = b.dataset.f;
+      if (f === "day") return;
+      dayFilter = null; active = f;
+      var dayBtn = fbox.querySelector('[data-f="day"]'); if (dayBtn) dayBtn.remove();
+      fbox.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x.dataset.f === f); });
+      history.replaceState(null, "", f === "all" ? "map.html" : "map.html?cat=" + f);
+      apply(true);
+    });
+    apply(true);
+
+    // locate me
+    var me = null, watch = null, first = true, btn = document.getElementById("locate");
+    btn.addEventListener("click", function () {
+      if (watch !== null) {
+        navigator.geolocation.clearWatch(watch); watch = null;
+        if (me) { map.removeLayer(me); me = null; }
+        btn.setAttribute("aria-pressed", "false"); return;
+      }
+      if (!navigator.geolocation) return;
+      btn.setAttribute("aria-pressed", "true"); first = true;
+      watch = navigator.geolocation.watchPosition(function (pos) {
+        var ll = [pos.coords.latitude, pos.coords.longitude];
+        if (!me) me = L.marker(ll, { icon: L.divIcon({ className: "", iconSize: [18, 18], iconAnchor: [9, 9], html: '<div class="me"></div>' }), zIndexOffset: 1000 }).addTo(map);
+        else me.setLatLng(ll);
+        if (first) { map.setView(ll, 15); first = false; }
+      }, function () {
+        btn.setAttribute("aria-pressed", "false"); watch = null;
+        alert("Location is off. Allow location for this site in Settings to see where you are.");
+      }, { enableHighAccuracy: true, maximumAge: 15000 });
+    });
+  })();
+  </script>
+</body>
+</html>
