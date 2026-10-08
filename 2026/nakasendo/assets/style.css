@@ -414,3 +414,4 @@ body.page-map { padding-bottom: 0; }
 @keyframes plflash { 0%, 30% { border-color: var(--today); box-shadow: 0 0 0 4px color-mix(in srgb, var(--today) 30%, transparent); } 100% { border-color: var(--line); box-shadow: none; } }
 @media (prefers-reduced-motion: reduce) { .pl-item.flash { animation: none; border: 2px solid var(--today); } }
 @media (min-width: 900px) { .pl-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; } .pl-area { grid-column: 1 / -1; } }
+.pl-btns { display: flex; flex-direction: column; gap: 6px; flex: 0 0 auto; }

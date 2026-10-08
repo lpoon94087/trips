@@ -17,7 +17,7 @@
   <main class="wrap">
     <header class="page-head">
       <h1>Our saved places</h1>
-      <p>From our shared Google Maps list, grouped by type and in trip order.</p>
+      <p>From our shared Google Maps list: <strong id="pl-total">102 places</strong>, grouped by type and in trip order.</p>
     </header>
 
     <div class="pl-top">
@@ -40,7 +40,8 @@
   <script src="assets/app.js"></script>
   <script>
   (function () {
-    var GROUPS = [["food", "Food"], ["sweets", "Sweets and cafés"], ["onsen", "Onsen"], ["sight", "Sights"], ["shop", "Shopping"], ["transit", "Stations"]];
+    var GROUPS = [["food", "Food"], ["sweets", "Sweets and cafés"], ["onsen", "Onsen"], ["sight", "Sights"], ["shop", "Shopping"], ["stay", "Stays"], ["transit", "Stations"], ["town", "Towns"]];
+    document.getElementById("pl-total").textContent = SAVED.length + " places";
     function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
     function norm(s) { return String(s || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, ""); }
     function gmaps(p) { return p.url || "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.q); }
@@ -67,7 +68,8 @@
           lastArea = p.areaLabel;
         }
         html += '<li class="pl-item" id="p-' + SAVED.indexOf(p) + '"><div class="pl-text"><p class="pl-name">' + esc(p.name) + '</p><p class="pl-meta">' + meta(p) + "</p></div>" +
-          '<a class="btn small" href="' + gmaps(p) + '" target="_blank" rel="noopener" aria-label="Open ' + esc(p.name) + ' in Google Maps">Google Maps</a></li>';
+          '<div class="pl-btns">' + (p.stay ? '<a class="btn small ghost" href="stays.html#' + p.stay + '">Stay details</a>' : "") +
+          '<a class="btn small" href="' + gmaps(p) + '" target="_blank" rel="noopener" aria-label="Open ' + esc(p.name) + ' in Google Maps">Google Maps</a></div></li>';
       });
       html += "</ul></section>";
     });
