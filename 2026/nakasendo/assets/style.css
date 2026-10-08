@@ -71,11 +71,11 @@ h1, h2, h3 { font-family: var(--f-display); font-weight: 800; color: var(--ink);
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--surface);
   border-top: 1px solid var(--line);
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(6, 1fr);
 }
 .tabbar a {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  text-decoration: none; color: var(--muted); font-size: 12.5px; font-weight: 500;
+  text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 500; min-width: 0;
 }
 .tabbar svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .tabbar a[aria-current="page"] { color: var(--ink); font-weight: 700; }

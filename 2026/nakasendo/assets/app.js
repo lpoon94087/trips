@@ -9,6 +9,7 @@
     map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>',
     stays: '<path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="2"/>',
     info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+    places: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
     hike: '<path d="M5 19c6 0 12-5 13-14-8 1-13 6-13 14z"/><path d="M5 19 13 11"/>',
     bird: '<path d="M4 15c3 0 5-1 7-4l2-3a3 3 0 0 1 5 1l2 1-2 1c0 5-4 8-9 8H6"/><path d="M11 19l-1 2M14 18l1 3"/>',
     onsen: '<path d="M8 4c-1 1.5 1 2.5 0 4M12 3c-1 1.5 1 2.5 0 4M16 4c-1 1.5 1 2.5 0 4"/><path d="M4 13c0 4 3.5 7 8 7s8-3 8-7"/><path d="M3 12h18"/>',
@@ -111,7 +112,7 @@
 
   // ---------- tab bar ----------
   var page = document.body.dataset.page;
-  var tabs = [["index.html", "today", "Today"], ["days.html", "days", "Days"], ["map.html", "map", "Map"], ["stays.html", "stays", "Stays"], ["info.html", "info", "Info"]];
+  var tabs = [["index.html", "today", "Today"], ["days.html", "days", "Days"], ["places.html", "places", "Places"], ["map.html", "map", "Map"], ["stays.html", "stays", "Stays"], ["info.html", "info", "Info"]];
   var nav = document.createElement("nav");
   nav.className = "tabbar";
   nav.setAttribute("aria-label", "Sections");
