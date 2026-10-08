@@ -11,40 +11,46 @@
         h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
         p.subtitle { margin: 5px 0 0 0; font-size: 13px; color: #a9b9c6; }
         #map { width: 100vw; height: calc(100vh - 65px); z-index: 1; }
-        
+
         .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); overflow: hidden; padding: 0; }
         .leaflet-popup-content { margin: 0; line-height: 1.4; width: 300px !important; }
-        
+
         .popup-header { padding: 12px 15px; color: white; display: flex; justify-content: space-between; align-items: baseline; }
         .popup-header.transit { background-color: #34495e; }
         .popup-header.city { background-color: #8e44ad; }
         .popup-header.nature { background-color: #27ae60; }
         .popup-header.onsen { background-color: #e74c3c; }
-        
+        .popup-header.hotel { background-color: #b7862b; }
+
         .popup-title { font-weight: bold; font-size: 16px; margin-right: 10px; }
         .popup-day { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; white-space: nowrap; }
-        
+        .optional-badge { display: inline-block; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; background: #fff3cd; color: #7a5b00; border: 1px solid #f0d77a; border-radius: 10px; padding: 1px 8px; margin-bottom: 8px; }
+
         .popup-body { padding: 15px; background-color: #fff; }
         .popup-desc { font-size: 13px; color: #444; margin: 0 0 10px 0; font-style: italic; }
-        
+
         .popup-details { margin: 0 0 15px 0; padding-left: 18px; font-size: 12px; color: #333; }
         .popup-details li { margin-bottom: 4px; }
-        
+
         .link-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
         .action-link { display: block; text-align: center; background: #e8f4f8; color: #2980b9; text-decoration: none; padding: 6px; border-radius: 4px; font-size: 12px; font-weight: bold; transition: background 0.2s; border: 1px solid #bde0ec;}
         .action-link:hover { background: #d4eaf2; }
-        
+
         .popup-link { display: block; text-align: center; background: #f1f2f6; color: #2f3640; text-decoration: none; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: background 0.2s; }
         .popup-link:hover { background: #dfe4ea; }
-        
+
         .legend { background: white; padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 12px; line-height: 1.5; color: #333; }
         .legend i { width: 12px; height: 12px; display: inline-block; border-radius: 50%; margin-right: 8px; border: 2px solid white; box-shadow: 0 0 3px rgba(0,0,0,0.4); vertical-align: middle; }
+        .legend i.square { border-radius: 3px; }
+        .legend i.optional { opacity: 0.55; }
+        .legend .line { display: inline-block; width: 22px; height: 0; border-top: 3px dashed #2980b9; margin-right: 6px; vertical-align: middle; }
+        .legend .line.spur { border-top: 2px dotted #7f8c8d; }
     </style>
 </head>
 <body>
     <div id="header">
         <h1>Nakasendo 2026 Route Map</h1>
-        <p class="subtitle">Osaka &rarr; Kiso Valley &rarr; Karuizawa &rarr; Kusatsu Onsen &rarr; Tokyo</p>
+        <p class="subtitle">Osaka &rarr; Kiso Valley &rarr; Matsumoto &rarr; Karuizawa &rarr; Kusatsu Onsen &rarr; Tokyo &middot; Oct 10&ndash;24</p>
     </div>
     <div id="map"></div>
 
@@ -58,76 +64,153 @@
         }).addTo(map);
 
         var locations = [
-            { name: "Kansai Airport", lat: 34.4320, lng: 135.2304, day: "Day 1", type: "transit", desc: "Arrival hub in Osaka.", details: ["Arrive KIX 10:10 AM via EVA Air", "Train directly to downtown Osaka (arrival ~12:30 PM)", "Relax and settle in"], links: [] },
-            { name: "Osaka Kitchen St", lat: 34.6631, lng: 135.5050, day: "Day 2", type: "city", desc: "Sennichimae Doguyasuji market.", details: ["Morning cookware shopping", "Stock up on unique kitchen items"], links: [] },
-            { name: "teamLab Garden", lat: 34.6121, lng: 135.5218, day: "Day 2", type: "city", desc: "Immersive digital light art.", details: ["Starts around 6:00 PM", "Outdoor sensor-driven light installations integrated with nature"], links: [{text: "teamLab Osaka Official Info", url: "https://www.teamlab.art/e/botanicalgarden/"}] },
-            { name: "Nakatsugawa", lat: 35.4996, lng: 137.5028, day: "Day 3", type: "transit", desc: "Gateway to the Nakasendo.", details: ["1 hr 15 min JR ride from Nagoya", "Arrange luggage forwarding (~3000Y) to Kiso-Fukushima", "Stock up on cash (local trains are cash only)"], links: [] },
-            { name: "Magome-juku", lat: 35.5273, lng: 137.5668, day: "Day 4", type: "nature", desc: "Start of the Nakasendo hike.", details: ["Bus from Nakatsugawa (30 min)", "Hike to Tsumago: 8km walking distance taking 3-4 hours", "Use the ¥500 luggage forwarding between towns if needed"], links: [{text: "Official Hike Guide (Visit Kiso)", url: "https://en.visitkiso.com/nakasendo/magome-tsumago"}] },
-            { name: "Tsumago-juku", lat: 35.5768, lng: 137.5956, day: "Day 4", type: "city", desc: "Preserved Edo-period post town.", details: ["Overnight stay in traditional accommodation", "Morning walk to Nagiso (2hr)", "Business hours: 9:00 AM - 4:30 PM"], links: [] },
-            { name: "Kiso-Fukushima", lat: 35.8427, lng: 137.6961, day: "Day 5-7", type: "city", desc: "Valley basecamp.", details: ["Explore historic streets and stilt buildings over the river", "Onsen slow town days", "Train connections to Atera and Torii Pass"], links: [] },
-            { name: "Atera Valley", lat: 35.6888, lng: 137.6163, day: "Day 6", type: "nature", desc: "Emerald river and gorge.", details: ["Train to Nojiri (30 min), 5 min taxi to entrance", "Walk along the 15km valley famous for emerald-green water", "Most scenic area is 1 hr walk from entrance"], links: [{text: "Official English Field Guide (PDF)", url: "https://www.vill.okuwa.lg.jp/kanko/support/documents/aterafield_en.pdf"}] },
-            { name: "Narai-juku", lat: 35.9657, lng: 137.8138, day: "Day 7", type: "nature", desc: "Target of Torii Pass hike.", details: ["Train to Yabuhara (~20 min)", "Hike Torii Pass (2.5-4 hrs, 5-6 km)", "Gentle ridge walking with 1000 ft descent to Narai"], links: [] },
-            { name: "Matsumoto", lat: 36.2386, lng: 137.9689, day: "Day 8", type: "city", desc: "Castle and art district.", details: ["1.5-2 hrs travel via JR Shinano", "Visit Matsumoto Castle (National Treasure, 6 internal floors)", "See Yayoi Kusama collection at Museum of Art"], links: [{text: "Matsumoto Castle Official Site", url: "https://visitmatsumoto.com/en/spot/detail_1001.html"}] },
-            { name: "Karuizawa Sanctuary", lat: 36.3686, lng: 138.5958, day: "Day 10", type: "nature", desc: "Premier wildlife focus.", details: ["Opens at 9:30 AM", "Birdwatching quiet nature loop", "Potential to see flying squirrels at dusk"], links: [] },
+            // Day 1-2 Osaka
+            { name: "Kansai Airport", lat: 34.4320, lng: 135.2304, day: "Day 1", type: "transit", desc: "Arrival hub in Osaka.", details: ["Arrive KIX Terminal 1 at 10:10 AM via EVA Air (from Taipei)", "Limousine bus from T1 stop 5 to the hotel (UM9), ~60 min, ¥1,800", "Buses at :07 / :17 / :27 / :37 / :47 past the hour"], links: [] },
+            { name: "Osaka Kitchen St", lat: 34.6631, lng: 135.5050, day: "Day 2", type: "city", desc: "Sennichimae Doguyasuji market.", details: ["Cookware shopping, 10:00 AM - 6:00 PM", "Also nearby: Tenjinbashi-suji shopping street, Tenma market"], links: [] },
+            { name: "teamLab Garden", lat: 34.6121, lng: 135.5218, day: "Day 2", type: "city", optional: true, desc: "Immersive digital light art.", details: ["Evening, around 6:00 PM", "Outdoor sensor-driven light installations integrated with nature"], links: [{text: "teamLab Osaka Official Info", url: "https://www.teamlab.art/e/botanicalgarden/"}] },
+            { name: "Osaka Station", lat: 34.7025, lng: 135.4960, day: "Day 2", type: "transit", desc: "Pick up train tickets.", details: ["Print the Shinano 9 paper tickets (e5489) at a JR West ticket machine by Oct 11", "Day 3: JR Osaka to Shin-Osaka (4 min) before the 9:45 Nozomi"], links: [] },
+
+            // Day 3 Osaka -> Nakatsugawa
+            { name: "Nagoya Station", lat: 35.1709, lng: 136.8815, day: "Day 3", type: "transit", desc: "Shinkansen to limited express transfer.", details: ["Nozomi 6 from Shin-Osaka 9:45, arrives 10:34", "Shinano 9 departs 11:00 from platform 10", "Allow ~10 min through the transfer gate"], links: [] },
+            { name: "Nakatsugawa", lat: 35.4996, lng: 137.5028, day: "Day 3", type: "transit", desc: "Gateway to the Nakasendo.", details: ["Shinano 9 arrives 11:48 (48 min from Nagoya)", "Forward suitcases (Yamato, ~¥3,000) to Kiso-Fukushima before 2:00 PM, delivery Oct 14", "Stock up on cash (local trains are cash only)", "Try kurikinton chestnut sweets, in season in October"], links: [] },
+
+            // Day 4-5 Nakasendo walk
+            { name: "Magome-juku", lat: 35.5273, lng: 137.5668, day: "Day 4", type: "nature", desc: "Start of the Nakasendo hike.", details: ["8:00 AM taxi from Nakatsugawa (~¥4,400-5,500)", "Explore Magome 8:30-9:30", "Hike to Tsumago: 5.2 mi, +1,069 / -1,410 ft, about 4 hours", "Odaki and Medaki waterfalls along the way"], links: [{text: "Official Hike Guide (Visit Kiso)", url: "https://en.visitkiso.com/nakasendo/magome-tsumago"}, {text: "AllTrails: Magome - Tsumago", url: "https://www.alltrails.com/trail/japan/gifu/nakasendo-magome-tsumago"}] },
+            { name: "Tsumago-juku", lat: 35.5768, lng: 137.5956, day: "Day 4-5", type: "city", desc: "Preserved Edo-period post town.", details: ["Business hours: 9:00 AM - 4:30 PM", "Bento delivery at 5:00 PM (cash)", "Day 5 morning: walk to Nagiso Station (2.6 mi, ~1-2 hrs)"], links: [{text: "AllTrails: Nagiso from Tsumago", url: "https://www.alltrails.com/trail/japan/nagano/nakasendo-nagiso-tsumago"}] },
+            { name: "Nagiso Station", lat: 35.5988, lng: 137.6084, day: "Day 5", type: "transit", desc: "End of the Tsumago walk.", details: ["Lunch in Nagiso", "JR Chuo Line to Kiso-Fukushima (~45-60 min)"], links: [] },
+
+            // Day 5-7 Kiso-Fukushima base
+            { name: "Kiso-Fukushima", lat: 35.8427, lng: 137.6961, day: "Day 5-7", type: "city", desc: "Valley basecamp.", details: ["Kozenji Temple and the Yamamura Daikan Yashiki residence", "Historic streets and stilt buildings over the river", "Onsen slow town days", "Train connections to Atera and Torii Pass"], links: [] },
+            { name: "Atera Valley", lat: 35.6888, lng: 137.6163, day: "Day 6", type: "nature", desc: "Emerald river and gorge.", details: ["Train to Nojiri (30 min), 5 min taxi to entrance", "Easy riverside forest walk with emerald-green water", "Most scenic area is 1 hr walk from entrance"], links: [{text: "Official English Field Guide (PDF)", url: "https://www.vill.okuwa.lg.jp/kanko/support/documents/aterafield_en.pdf"}] },
+            { name: "Narai-juku", lat: 35.9657, lng: 137.8138, day: "Day 7", type: "nature", desc: "End of the Torii Pass hike.", details: ["Train to Yabuhara (~20 min)", "Torii Pass hike (optional): 4.5 mi, 2.5-4 hrs, ~1,200 ft up and down", "Explore Narai 1-2 hrs; optional stop at Kiso-Hirasawa for lacquerware", "Train back to Kiso-Fukushima (~20-25 min)"], links: [{text: "AllTrails: Torii Pass", url: "https://www.alltrails.com/trail/japan/nagano/nakasendo-torii-pass"}] },
+
+            // Day 8 Matsumoto
+            { name: "Matsumoto", lat: 36.2386, lng: 137.9689, day: "Day 8", type: "city", desc: "Castle and art district.", details: ["Limited express Shinano 9:26 to 10:05 (¥2,210)", "Matsumoto Castle (National Treasure)", "Yayoi Kusama collection at the City Museum of Art", "Nawate and Nakamachi streets"], links: [{text: "Matsumoto Castle Official Site", url: "https://visitmatsumoto.com/en/spot/detail_1001.html"}] },
+
+            // Day 9-10 Karuizawa
+            { name: "Nagano Station", lat: 36.6439, lng: 138.1884, day: "Day 9", type: "transit", desc: "Transfer to the Hokuriku Shinkansen.", details: ["Shinano from Matsumoto 8:12, arrives 9:11", "Asama Shinkansen 9:30 to Karuizawa 10:00", "Total ¥4,290"], links: [] },
+            { name: "Kumoba Pond", lat: 36.3501, lng: 138.6233, day: "Day 9", type: "nature", desc: "Mirror pond ringed with autumn maples.", details: ["Short loop walk", "Mid-morning arrival in Karuizawa; check-in is 4:00 PM"], links: [] },
+            { name: "Karuizawa Sanctuary", lat: 36.3686, lng: 138.5958, day: "Day 10", type: "nature", desc: "Premier wildlife focus.", details: ["Early-morning Picchio bird walk in the Hoshino forest", "Wild Bird Sanctuary opens at 9:30 AM", "Potential to see flying squirrels at dusk"], links: [] },
             { name: "Shiraito Waterfall", lat: 36.3986, lng: 138.6014, day: "Day 10", type: "nature", desc: "Delicate mountain waterfall.", details: ["Reached via 25 min bus from Karuizawa", "Easy forest trails nearby"], links: [] },
-            { name: "Yubatake, Kusatsu", lat: 36.6231, lng: 138.5966, day: "Day 11", type: "onsen", desc: "Massive hot water field.", details: ["Direct bus from Karuizawa (1.5 hrs)", "Highly acidic, mineral-rich water for skin benefits", "Overnight ryokan stay"], links: [] },
-            { name: "Shinjuku, Tokyo", lat: 35.6896, lng: 139.7005, day: "Day 12", type: "transit", desc: "Final trip terminal.", details: ["Direct JR Bus Kanto from Kusatsu (4 hrs)", "Base for remaining Tokyo shopping and gardens"], links: [{text: "Kanto Bus Schedule & Fares", url: "https://www.kanto-bus.co.jp/english/nightway/kusatsu.html"}] }
+            { name: "Old Karuizawa Ginza", lat: 36.3567, lng: 138.6340, day: "Day 10", type: "city", desc: "Historic shopping street.", details: ["Cafés, shops, relaxed walking"], links: [] },
+
+            // Day 11-12 Kusatsu
+            { name: "Yubatake, Kusatsu", lat: 36.6231, lng: 138.5966, day: "Day 11-12", type: "onsen", desc: "Massive hot water field.", details: ["Bus from Karuizawa North Exit platform 2, 9:40 to 10:58 (¥2,240, IC card OK)", "Highly acidic, mineral-rich water for skin benefits", "Day 12: yumomi water-stirring show", "Bath houses: Otaki no Yu, Gozanoyu, free Shirahata and Jizo baths"], links: [] },
+            { name: "Sainokawara Open-Air Bath", lat: 36.6236, lng: 138.5897, day: "Day 11", type: "onsen", desc: "Big outdoor bath in a riverside park.", details: ["Open 7:00 AM - 8:00 PM; go in the evening", "No showers; bring or rent a towel"], links: [] },
+
+            // Day 13-15 Tokyo
+            { name: "Ueno, Tokyo", lat: 35.7142, lng: 139.7774, day: "Day 13-15", type: "city", desc: "Final Tokyo base.", details: ["Day 13: bus to Karuizawa 9:50, then Asama 614 12:00 to Ueno 13:06 (¥5,390)", "Ameyoko street; Muji / Uniqlo nearby", "Day 14: Ueno Park, Yanaka, Nezu Shrine"], links: [] },
+            { name: "Akihabara Station", lat: 35.6984, lng: 139.7731, day: "Day 15", type: "transit", desc: "Limousine bus to Haneda.", details: ["8:10 AM taxi from the hotel (~10 min)", "8:40 Airport Limousine Bus to Haneda T3, arrives 9:35"], links: [] },
+            { name: "Haneda Airport T3", lat: 35.5437, lng: 139.7690, day: "Day 15", type: "transit", desc: "Early departure.", details: ["12:40 PM flight to Taipei"], links: [] },
+            { name: "Narita Airport T1", lat: 35.7732, lng: 140.3874, day: "Day 15", type: "transit", desc: "Departures home.", details: ["Skyliner from Keisei Ueno (~11:30 AM and ~5:30 PM departures)", "3:50 PM flight to Hong Kong", "9:30 PM Zipair flight to San Francisco"], links: [] },
+
+            // Hotels
+            { name: "Hotel Hankyu RESPIRE", lat: 34.7014, lng: 135.4910, day: "Oct 10-11", type: "hotel", desc: "2 nights, Osaka (Umeda).", details: ["Check-in 3:00 PM, checkout before noon", "No breakfast", "~5 min walk to JR Osaka Station"], links: [] },
+            { name: "AB Hotel Nakatsugawa", lat: 35.4789, lng: 137.4956, day: "Oct 12", type: "hotel", desc: "1 night, Nakatsugawa.", details: ["~10 min taxi from the station", "Check-in 3:00 PM, checkout by 10:00 AM", "Breakfast included; public bath"], links: [] },
+            { name: "Tsumago guesthouse", lat: 35.5750, lng: 137.5930, day: "Oct 13", type: "hotel", desc: "1 night, traditional house in Tsumago.", details: ["Check-in 3:00-7:00 PM, checkout before 10:00 AM", "Bento and breakfast items delivered at 5:00 PM (cash)"], links: [] },
+            { name: "Kiso Mikawaya", lat: 35.8478, lng: 137.6952, day: "Oct 14-16", type: "hotel", desc: "3 nights, Kiso-Fukushima.", details: ["Check-in 3:00-10:30 PM, checkout before 10:00 AM", "Buffet breakfast 6:30-8:30; onsen", "Forwarded luggage arrives here"], links: [] },
+            { name: "Mitsubikiya", lat: 36.2326, lng: 137.9711, day: "Oct 17", type: "hotel", desc: "1 night, Matsumoto (family suite).", details: ["Check-in only 3:00-5:00 PM", "Breakfast included; dinner ~6:30 PM (pre-ordered)"], links: [] },
+            { name: "Compass Globe", lat: 36.3522, lng: 138.5913, day: "Oct 18-19", type: "hotel", desc: "2 nights, Karuizawa (3-bedroom apartment).", details: ["Check-in 4:00-9:00 PM, checkout before 10:00 AM", "Door code sent by 4:00 PM on arrival day"], links: [] },
+            { name: "Kusatsu house", lat: 36.6215, lng: 138.5985, day: "Oct 20-21", type: "hotel", desc: "2 nights, private house in Kusatsu.", details: ["Check in at a separate office near the bus terminal", "Luggage drop-off allowed before 3:00 PM check-in", "Checkout before 10:00 AM"], links: [] },
+            { name: "Mitsui Garden Hotel Ueno", lat: 35.7119, lng: 139.7781, day: "Oct 22-23", type: "hotel", desc: "2 nights, Tokyo (Ueno).", details: ["2 min walk from Ueno Station", "Check-in after 3:00 PM, checkout before 11:00 AM"], links: [] }
+        ];
+
+        // Main travel route in order (cities, transfers, and the walk between post towns).
+        var routeCoords = [
+            [34.4320, 135.2304], // Kansai Airport
+            [34.7014, 135.4910], // Osaka (hotel)
+            [35.1709, 136.8815], // Nagoya
+            [35.4996, 137.5028], // Nakatsugawa
+            [35.5273, 137.5668], // Magome
+            [35.5768, 137.5956], // Tsumago
+            [35.5988, 137.6084], // Nagiso
+            [35.8427, 137.6961], // Kiso-Fukushima
+            [36.2386, 137.9689], // Matsumoto
+            [36.6439, 138.1884], // Nagano
+            [36.3426, 138.6353], // Karuizawa Station
+            [36.6231, 138.5966], // Kusatsu
+            [36.3426, 138.6353], // back to Karuizawa Station
+            [35.7142, 139.7774], // Ueno
+            [35.7732, 140.3874]  // Narita
+        ];
+
+        // Day trips and side legs, drawn as lighter dotted lines.
+        var spurs = [
+            [[35.8427, 137.6961], [35.6888, 137.6163]], // Kiso-Fukushima <-> Atera Valley
+            [[35.8427, 137.6961], [35.9657, 137.8138]], // Kiso-Fukushima <-> Narai (via Yabuhara)
+            [[36.3426, 138.6353], [36.3686, 138.5958], [36.3986, 138.6014]], // Karuizawa day: sanctuary, falls
+            [[35.7142, 139.7774], [35.6984, 139.7731], [35.5437, 139.7690]]  // Ueno -> Akihabara -> Haneda
         ];
 
         var typeColors = {
             'transit': '#34495e',
             'city': '#8e44ad',
             'nature': '#27ae60',
-            'onsen': '#e74c3c'
+            'onsen': '#e74c3c',
+            'hotel': '#b7862b'
         };
-
-        var routeCoords = [];
 
         locations.forEach(function(loc) {
             var color = typeColors[loc.type];
-            
+            var isHotel = loc.type === 'hotel';
+            var size = isHotel ? 12 : 14;
+            var style = "background-color:" + color + "; width:" + size + "px; height:" + size + "px; " +
+                "border-radius:" + (isHotel ? "3px" : "50%") + "; border:2px " + (loc.optional ? "dashed" : "solid") + " white; " +
+                "box-shadow: 0 0 5px rgba(0,0,0,0.6); margin-top: -" + (size / 2) + "px; margin-left: -" + (size / 2) + "px;" +
+                (loc.optional ? " opacity:0.6;" : "");
+
             var customIcon = L.divIcon({
                 className: 'custom-div-icon',
-                html: "<div style='background-color:" + color + "; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.6); margin-top: -7px; margin-left: -7px;'></div>",
-                iconSize: [14, 14],
+                html: "<div style='" + style + "'></div>",
+                iconSize: [size, size],
                 iconAnchor: [0, 0]
             });
 
-            var marker = L.marker([loc.lat, loc.lng], {icon: customIcon}).addTo(map);
-            
+            var marker = L.marker([loc.lat, loc.lng], {icon: customIcon, zIndexOffset: isHotel ? -100 : 0}).addTo(map);
+
             var detailsHtml = loc.details.map(function(d) { return "<li>" + d + "</li>"; }).join('');
-            
+
             var linksHtml = '';
             if (loc.links && loc.links.length > 0) {
                 var linkButtons = loc.links.map(function(link) {
-                    return "<a class='action-link' href='" + link.url + "' target='_blank'>\ud83d\udd17 " + link.text + "</a>";
+                    return "<a class='action-link' href='" + link.url + "' target='_blank'>🔗 " + link.text + "</a>";
                 }).join('');
                 linksHtml = "<div class='link-container'>" + linkButtons + "</div>";
             }
-            
-            var popupContent = 
+
+            var popupContent =
                 "<div class='popup-header " + loc.type + "'>" +
-                    "<span class='popup-title'>" + loc.name + "</span>" +
+                    "<span class='popup-title'>" + (isHotel ? "🛏️ " : "") + loc.name + "</span>" +
                     "<span class='popup-day'>" + loc.day + "</span>" +
                 "</div>" +
                 "<div class='popup-body'>" +
+                    (loc.optional ? "<span class='optional-badge'>Optional</span>" : "") +
                     "<p class='popup-desc'>" + loc.desc + "</p>" +
                     "<ul class='popup-details'>" + detailsHtml + "</ul>" +
                     linksHtml +
-                    "<a class='popup-link' href='https://www.google.com/maps/search/?api=1&query=" + loc.lat + "," + loc.lng + "' target='_blank'>\ud83d\udccd Open in Google Maps</a>" +
+                    "<a class='popup-link' href='https://www.google.com/maps/search/?api=1&query=" + loc.lat + "," + loc.lng + "' target='_blank'>📍 Open in Google Maps</a>" +
                 "</div>";
-            
+
             marker.bindPopup(popupContent);
-            routeCoords.push([loc.lat, loc.lng]);
         });
 
         L.polyline(routeCoords, {
-            color: '#2980b9', 
-            weight: 3, 
+            color: '#2980b9',
+            weight: 3,
             opacity: 0.8,
             dashArray: '8, 8',
             lineJoin: 'round'
         }).addTo(map);
+
+        spurs.forEach(function(coords) {
+            L.polyline(coords, {
+                color: '#7f8c8d',
+                weight: 2,
+                opacity: 0.8,
+                dashArray: '2, 6',
+                lineJoin: 'round'
+            }).addTo(map);
+        });
 
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
@@ -136,7 +219,11 @@
             div.innerHTML += '<i style="background: #34495e"></i> Transit / Hub<br>';
             div.innerHTML += '<i style="background: #8e44ad"></i> City / Art<br>';
             div.innerHTML += '<i style="background: #27ae60"></i> Nature / Hike<br>';
-            div.innerHTML += '<i style="background: #e74c3c"></i> Onsen';
+            div.innerHTML += '<i style="background: #e74c3c"></i> Onsen<br>';
+            div.innerHTML += '<i class="square" style="background: #b7862b"></i> Hotel<br>';
+            div.innerHTML += '<i class="optional" style="background: #8e44ad"></i> Optional<br>';
+            div.innerHTML += '<span class="line"></span> Main route<br>';
+            div.innerHTML += '<span class="line spur"></span> Day trip / side leg';
             return div;
         };
         legend.addTo(map);
