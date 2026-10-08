@@ -1,7 +1,7 @@
 // Offline cache: pages and assets are served from cache and refreshed in the background.
-const CACHE = "nakasendo-v4";
+const CACHE = "nakasendo-v6";
 const CORE = [
-  "./", "index.html", "days.html", "map.html", "stays.html", "info.html",
+  "./", "index.html", "days.html", "map.html", "stays.html", "info.html", "places.html", "assets/places.js",
   "assets/style.css", "assets/data.js", "assets/app.js",
   "img/bg.jpg", "img/icon-192.png", "img/apple-touch-icon.png", "manifest.webmanifest"
 ];

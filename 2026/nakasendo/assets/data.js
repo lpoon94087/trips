@@ -277,8 +277,8 @@ window.STAYS = [
   {
     id: "tsumago", name: "Traditional house in Tsumago", area: "Tsumago-juku", from: "2026-10-13", nights: 1,
     in: "15:00–19:00", out: "Before 10:00",
-    addrJp: "長野県木曽郡南木曽町 妻籠宿", addrEn: "Tsumago-juku, Nagiso (exact address in the booking)",
-    lat: 35.5768, lng: 137.5956,
+    addrJp: "〒399-5302 長野県木曽郡南木曽町吾妻2203-1", addrEn: "2203-1 Azuma, Nagiso, Kiso District, Nagano (Tsumago-juku)",
+    lat: 35.5765, lng: 137.5949,
     notes: ["Bento and breakfast items delivered at 17:00, pay cash", "Backpacks only tonight"]
   },
   {
@@ -305,10 +305,11 @@ window.STAYS = [
   {
     id: "kusatsu", name: "Private house in Kusatsu", area: "Kusatsu Onsen", from: "2026-10-20", nights: 2,
     in: "15:00–19:00", out: "Before 10:00",
-    addrJp: "群馬県吾妻郡草津町草津452-10 KAWAMURA RESORT 1階", addrEn: "Check-in office: Kawamura Resort 1F, 452-10 Kusatsu (3 min walk from the bus terminal)",
-    addrLabel: "Check-in office",
-    lat: 36.6215, lng: 138.5985,
-    notes: ["Check in at the office first; the house is nearby", "Leave bags at the office before 15:00", "Pick-up and drop-off 15:00–22:00"]
+    addrJp: "〒377-1711 群馬県吾妻郡草津町草津560-8", addrEn: "560-8 Kusatsu, Agatsuma District, Gunma",
+    addrLabel: "The house",
+    alt: { label: "Check-in office (go here first)", addrJp: "群馬県吾妻郡草津町草津452-10 KAWAMURA RESORT 1階", addrEn: "Kawamura Resort 1F, 452-10 Kusatsu (3 min walk from the bus terminal)" },
+    lat: 36.6257, lng: 138.6001,
+    notes: ["Check in at the office first, then go to the house", "Leave bags at the office before 15:00", "Pick-up and drop-off 15:00–22:00"]
   },
   {
     id: "ueno", name: "Mitsui Garden Hotel Ueno", area: "Tokyo (Ueno)", from: "2026-10-22", nights: 2,

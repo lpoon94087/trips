@@ -260,6 +260,8 @@
         "<ul>" + s.notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul>" +
         (s.addrLabel ? '<p class="muted" style="margin:0;font-size:14px">' + esc(s.addrLabel) + "</p>" : "") +
         '<p class="addr-jp" lang="ja">' + esc(s.addrJp) + '</p><p class="addr-en">' + esc(s.addrEn) + "</p>" +
+        (s.alt ? '<p class="muted" style="margin:0;font-size:14px">' + esc(s.alt.label) + '</p><p class="addr-jp" lang="ja">' + esc(s.alt.addrJp) + '</p><p class="addr-en">' + esc(s.alt.addrEn) + "</p>" +
+          '<p style="margin:0 0 12px"><button class="btn small ghost" type="button" data-taxi="' + s.id + '" data-alt="1">Show check-in office to taxi driver</button></p>' : "") +
         '<div class="btn-row"><button class="btn" type="button" data-taxi="' + s.id + '">Show to taxi driver</button>' +
         '<a class="btn ghost" href="' + apple + '">Apple Maps</a><a class="btn ghost" href="' + google + '" target="_blank" rel="noopener">Google Maps</a>' +
         (s.phone ? '<a class="btn ghost" href="tel:' + s.phone.replace(/[^+\d]/g, "") + '">' + icon("phone").replace("<svg", '<svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2"') + "Call</a>" : "") +
@@ -273,7 +275,8 @@
     else sayBtn.hidden = true;
     el.addEventListener("click", function (e) {
       var b = e.target.closest("[data-taxi]"); if (!b) return;
-      current = stayFor(b.dataset.taxi);
+      var s0 = stayFor(b.dataset.taxi);
+      current = b.dataset.alt ? { name: s0.name + ", " + s0.alt.label, addrJp: s0.alt.addrJp, phone: s0.phone } : s0;
       ov.querySelector(".big").textContent = current.addrJp;
       ov.querySelector(".nm").textContent = current.name;
       ov.querySelector(".tel").textContent = current.phone || "";

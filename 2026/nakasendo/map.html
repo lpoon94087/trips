@@ -69,7 +69,7 @@
         return '<button type="button" data-f="' + f[0] + '" aria-pressed="' + (dayFilter === null && active === f[0]) + '">' +
           (f[0] !== "all" ? '<i style="background:' + col(f[0]) + '"></i>' : "") + f[1] + "</button>";
       }).join("") +
-      '<a class="saved" href="' + TRIP.savedList + '" target="_blank" rel="noopener">Our saved places</a>';
+      '<a class="saved" href="places.html">Our saved places</a>';
 
     function apply(fit) {
       var shown = [];
