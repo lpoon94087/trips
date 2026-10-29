@@ -184,7 +184,7 @@
 
         // Popup viewer over the map: large photos, videos streamed from the album (720p, falling back to 360p).
         var viewer = document.getElementById('viewer'), media = viewer.querySelector('.media'),
-            caption = viewer.querySelector('.caption'), gp = viewer.querySelector('.gp'), cur = null;
+            caption = viewer.querySelector('.caption'), gp = viewer.querySelector('.gp'), cur = null, openedAt = 0;
 
         function show(si, pi) {
             var s = stops[si], p = s.photos[pi], base = 'https://lh3.googleusercontent.com/pw/' + p[1];
@@ -200,6 +200,7 @@
             caption.innerHTML = '<b>' + s.name + '</b><span>' + s.day + ' &middot; ' + (pi + 1) + ' of ' + s.photos.length + '</span>';
             gp.href = photoLink(p);
             viewer.classList.add('open');
+            openedAt = Date.now();
         }
         function step(d) {
             if (!cur) return;
@@ -231,7 +232,11 @@
         }, { capture: true, passive: false });
         viewer.querySelector('.close').onclick = close;
         // Click the photo, or anywhere outside the card, to close. Videos close via × or outside, so their controls still work.
-        viewer.addEventListener('click', function(e) { if (e.target === viewer || e.target.tagName === 'IMG') close(); });
+        // iOS Safari sends the tap's click after the viewer has opened, and it lands on the new photo; ignore it.
+        viewer.addEventListener('click', function(e) {
+            if (Date.now() - openedAt < 600) return;
+            if (e.target === viewer || e.target.tagName === 'IMG') close();
+        });
         document.addEventListener('keydown', function(e) {
             if (!cur) return;
             if (e.key === 'Escape') close();
