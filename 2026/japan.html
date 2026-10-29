@@ -116,6 +116,7 @@
 
         var typeColors = { travel: '#5b6b7f', town: '#b8432f', hike: '#2e7d32', nature: '#12877a', onsen: '#c77a12' };
         var japan = [];
+        var canHover = window.matchMedia('(hover: hover)').matches;
 
         stops.forEach(function(s, si) {
             var color = typeColors[s.type];
@@ -150,10 +151,13 @@
                     "<a class='popup-link' href='" + ALBUM_URL + "' target='_blank'>&#128247; Open full album</a>" +
                 "</div>", { maxWidth: 300 });
 
-            var t = sample(s.photos, 3).map(function(p) { return "<img loading='lazy' src='" + thumb(p, 180) + "' alt=''>"; }).join('');
-            marker.bindTooltip("<div class='photo-tooltip'><div class='row'>" + t + "</div><span>" + s.name + " &middot; " + s.day + "</span></div>", {
-                direction: 'top', offset: [0, -8], opacity: 1, className: 'photo-tooltip-wrap'
-            });
+            // Hover previews only where there is a real hover; on phones a tap would open them on top of the popup.
+            if (canHover) {
+                var t = sample(s.photos, 3).map(function(p) { return "<img loading='lazy' src='" + thumb(p, 180) + "' alt=''>"; }).join('');
+                marker.bindTooltip("<div class='photo-tooltip'><div class='row'>" + t + "</div><span>" + s.name + " &middot; " + s.day + "</span></div>", {
+                    direction: 'top', offset: [0, -8], opacity: 1, className: 'photo-tooltip-wrap'
+                });
+            }
 
             if (s.key !== 'taipei') japan.push([s.lat, s.lng]);
         });
@@ -210,6 +214,21 @@
             e.preventDefault();
             show(+a.dataset.s, +a.dataset.p);
         });
+        // Taps: handle them directly, since Leaflet stops touch events inside popups and iOS Safari can drop the click.
+        // Listen in the capture phase so Leaflet can't swallow them; a finger that moves is scrolling the grid, not tapping.
+        var tap = null;
+        document.addEventListener('touchstart', function(e) {
+            var a = e.target.closest('.photos a');
+            tap = a && e.touches.length === 1 ? { a: a, x: e.touches[0].clientX, y: e.touches[0].clientY } : null;
+        }, { capture: true, passive: true });
+        document.addEventListener('touchend', function(e) {
+            if (!tap) return;
+            var t = e.changedTouches[0], start = tap;
+            tap = null;
+            if (Math.abs(t.clientX - start.x) > 10 || Math.abs(t.clientY - start.y) > 10) return;
+            e.preventDefault();  // no follow-up click, so the link doesn't also open Google Photos
+            show(+start.a.dataset.s, +start.a.dataset.p);
+        }, { capture: true, passive: false });
         viewer.querySelector('.close').onclick = close;
         // Click the photo, or anywhere outside the card, to close. Videos close via × or outside, so their controls still work.
         viewer.addEventListener('click', function(e) { if (e.target === viewer || e.target.tagName === 'IMG') close(); });
