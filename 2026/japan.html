@@ -4,6 +4,8 @@
     <title>Japan 2026: Nakasendō and Beyond</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google's video servers refuse requests that carry a Referer, so send none; map tiles opt back in below. -->
+    <meta name="referrer" content="no-referrer">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
     <style>
         html, body { height: 100%; }
@@ -93,7 +95,8 @@
 
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
             attribution: 'Tiles &copy; Esri, Esri Japan, METI, and the GIS User Community',
-            maxZoom: 18
+            maxZoom: 18,
+            referrerPolicy: 'strict-origin-when-cross-origin'
         }).addTo(map);
 
         // Stops in trip order. photos[] = [photoId, lh3 path, 1 if video] from the shared Google Photos album,
