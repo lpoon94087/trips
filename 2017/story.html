@@ -138,6 +138,7 @@
 
         var ALBUM_ID = 'AF1QipPVtebz-T7M47p9sEYX-xYVRFBaZ4RIvobJUgkXPC1hqvZWffB7Vwtf5ZpQ1McK0Q', ALBUM_KEY = 'dXF6UzQ1RVpVMmJUSGZTSnpNWW4wZ0h4RnhBMkhB';
         var typeColors = { travel: '#5b6b7f', town: '#b8432f', temple: '#7b3fa0', nature: '#12877a', onsen: '#c77a12' };
+        var COVER_STOP = 'shirakawago', OFF_MAP = [];  // cover photo's stop; stops left out of the opening view
         var N = items.length;
         function photoLink(it) { return 'https://photos.google.com/share/' + ALBUM_ID + '/photo/' + it[0] + '?key=' + ALBUM_KEY; }
         function lh3(it) { return 'https://lh3.googleusercontent.com/pw/' + it[1]; }
@@ -197,7 +198,7 @@
         });
         var head = L.marker(track[0], { icon: L.divIcon({ className: '', html: "<div class='head-dot'></div>", iconSize: [0, 0] }), interactive: false, zIndexOffset: 1000 });
         var label = L.tooltip({ permanent: true, direction: 'right', offset: [10, 0], className: 'stop-label' });
-        map.fitBounds(L.latLngBounds(stops.map(function(s) { return [s.lat, s.lng]; })), { padding: [30, 30] });
+        map.fitBounds(L.latLngBounds(stops.filter(function(s) { return OFF_MAP.indexOf(s.key) < 0; }).map(function(s) { return [s.lat, s.lng]; })), { padding: [30, 30] });
 
         var km = 0;
         for (var i = 1; i < track.length; i++) km += map.distance(track[i - 1], track[i]) / 1000;
@@ -225,8 +226,10 @@
                 anim = t < 1 ? requestAnimationFrame(frame) : null;
             })(t0);
         }
+        // A stop far from the route so far (a layover abroad) is shown at the stop itself.
+        function offRoute(it) { var s = stops[it[4]]; return map.distance(track[it[5]], [s.lat, s.lng]) > 100000; }
         function camera(prevStop, it, smooth) {
-            var target = L.latLng(track[it[5]]);
+            var s = stops[it[4]], target = L.latLng(offRoute(it) ? [s.lat, s.lng] : track[it[5]]);
             if (prevStop !== it[4] || map.getZoom() < 12) {
                 var far = map.distance(map.getCenter(), target) > 30000;
                 var z = map.getZoom() > 16 ? map.getZoom() : map.getSize().x < 500 ? 13.5 : 14.5;
@@ -318,7 +321,8 @@
             scrub.value = i;
             count.textContent = 'Day ' + dayNum(it[6]) + ' · ' + (highlights && isHL[i] ? hlPos[i] + ' / ' + H : (i + 1) + ' / ' + N);
             stopsel.value = it[4];
-            routeTo(it[5], smooth, Math.min(1400, +speed.value * 0.6));
+            if (offRoute(it)) { routeTo(it[5], false); head.setLatLng([s.lat, s.lng]); }
+            else routeTo(it[5], smooth, Math.min(1400, +speed.value * 0.6));
             camera(prevStop, it, smooth);
             paintStops(i);
             if (!label._map) label.addTo(map), head.addTo(map);
@@ -384,7 +388,7 @@
         var h = parseInt(location.hash.slice(1), 10);
         if (h >= 1 && h <= N) go(h - 1, false);
         else {
-            var bg = items[firstIdx[stops.findIndex(function(s) { return s.key === 'shirakawago'; })] + 2];
+            var bg = items[firstIdx[stops.findIndex(function(s) { return s.key === COVER_STOP; })] + 2];
             photo.insertAdjacentHTML('afterbegin', "<img class='m in' src='" + lh3(bg) + "=w2000-h2000' alt=''>");
             shown = photo.querySelector('img.m');
         }
