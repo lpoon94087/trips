@@ -14,3 +14,4 @@
 ## 2017
 
 - [Japan 2017 Photo Map](https://lpoon94087.github.io/trips/2017/japan.html) — Tokyo → Kanazawa → Shirakawa-go → Kyoto → Osaka, with photos and videos at each stop (Oct 1–14)
+- [Japan 2017 Slideshow](https://lpoon94087.github.io/trips/2017/story.html) — Photos and the map side by side, with the route drawing itself as the slideshow plays (highlights or every photo)
